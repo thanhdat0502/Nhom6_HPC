@@ -1,4 +1,4 @@
-# Smith-Waterman OpenMP — Tuần 1–3
+# Smith-Waterman OpenMP — Tuần 1–4
 
 Đề tài 6, môn **Tính toán hiệu năng cao**: khớp mẫu chuỗi gene sinh học quy mô lớn.
 Tuần 1 xây dựng nền tảng C++17: Smith-Waterman tuần tự, đọc FASTA, sinh DNA,
@@ -491,3 +491,67 @@ NCBI và log CTest Debug/Release mới. Mỗi build đạt 9/9 nhóm CTest, 158 
 Điểm số tái lập được; cấu hình nhanh nhất thay đổi giữa các phiên, nên số speedup
 và cấu hình tốt nhất trong báo cáo tuần 3 phải được ghi kèm phiên đo/dataset.
 Kết quả gốc và mã lõi C++ được bảo toàn. Chưa xác minh bằng race detector.
+
+## Chạy demo và đóng gói — Tuần 4
+
+Các lệnh sau chạy trong thư mục project bằng Windows PowerShell 5.1. Dùng
+MSYS2 UCRT64 trên PATH như cấu hình hiện tại; CMake tự liên kết OpenMP.
+
+```powershell
+cmake -S . -B build-debug -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-debug --clean-first --parallel 4
+ctest --test-dir build-debug --output-on-failure
+
+cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build-release --clean-first --parallel 4
+ctest --test-dir build-release --output-on-failure
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo_week4.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package_release.ps1
+```
+
+`ExecutionPolicy Bypass` chỉ áp dụng cho process PowerShell con này, không sửa
+policy người dùng/hệ thống; có thể bỏ nếu policy hiện tại đã cho chạy script.
+Release mặc định của GCC là `-O3 -DNDEBUG`; không bật tối ưu thay đổi semantics.
+
+Demo chạy score 8, traceback có gap (score 14), đọc FASTA mẫu, tìm kiếm serial
+và parallel default/static/dynamic. Script chọn `min(4, max_supported_threads)`,
+in actual team từ CLI và so toàn bộ stdout để kiểm tra cả điểm lẫn thứ tự.
+Script không sửa dữ liệu hoặc chạy benchmark lớn. Nếu thiếu executable/FASTA,
+script trả exit 1 và hướng dẫn build thay vì báo hoàn tất. Có thể truyền
+`-ExecutablePath`, `-SampleDirectory`, `-BenchmarkDirectory` để chỉ định đường dẫn;
+các giá trị mặc định tính từ vị trí script, không phụ thuộc thư mục làm việc.
+
+Packager yêu cầu build Release, dùng `objdump` cạnh compiler trong CMake cache
+để duyệt DLL imports đệ quy. Trên toolchain đã kiểm tra, bốn runtime cần đóng
+kèm là `libgcc_s_seh-1.dll`, `libstdc++-6.dll`, `libgomp-1.dll`,
+`libwinpthread-1.dll`. Các DLL Windows/API-set/UCRT do hệ điều hành cung cấp,
+không sao chép từ System32. Thiếu runtime hoặc license notice thì dừng;
+không tải/cài toolchain. Debug không được dùng làm bản Release.
+
+Kết quả mặc định ở `dist/Smith-Waterman-OpenMP-Release-<timestamp>-<id>/` và ZIP
+cùng tên; `/dist/` bị Git ignore. Có thể truyền `-BuildDirectory` và `-Destination`.
+Destination hoặc ZIP đã có sẽ bị từ chối, không xóa/ghi đè bản cũ. Gói gồm:
+
+- `bin/`: hai executable và runtime DLL cần thiết.
+- `data/samples/`, `scripts/`: FASTA mẫu và demo.
+- `source/`: nguồn C++, headers, CMake, tests, scripts, tài liệu kỹ thuật và dữ liệu mẫu nhỏ.
+- `licenses/`, `README_RUN.md`, `package_manifest.json`: notices, lệnh chạy, SHA-256 và dependency graph.
+
+Không đóng gói `.git`, build cache, compiler hoặc bộ benchmark lịch sử; CSV/PNG
+gốc vẫn nằm trong repo. Packager kiểm tra executable và demo bằng PATH chỉ có
+thư mục Windows. CTest Release còn giải nén ZIP vào thư mục tạm ngoài repo rồi
+chạy demo, benchmark **smoke** và xác minh inventory hash. Bản nguồn không kèm
+Git vẫn configure được; metadata dùng revision `unknown`, trạng thái chưa xác
+minh sạch khi không đọc được Git.
+
+Để chạy từ ZIP đã giải nén:
+
+```powershell
+.\bin\sw_cli.exe --help
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo_week4.ps1 -ExecutablePath .\bin\sw_cli.exe
+```
+
+Gói nhắm Windows x86-64 với Universal CRT tương thích (Windows 10/11). Đã kiểm
+tra trên máy build với PATH tối giản; chưa chứng nhận máy Windows thứ hai.
+Nhật ký kỹ thuật và số test thực tế: [week4_code_audit.md](docs/week4_code_audit.md).

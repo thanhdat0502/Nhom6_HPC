@@ -1,0 +1,18 @@
+{
+  "datasets": 2,
+  "warmups": 2,
+  "runs": 7,
+  "raw_rows": 54,
+  "measured_rows": 42,
+  "summary_rows": 6,
+  "all_formulas_verified": true,
+  "all_repetitions_present": true,
+  "dataset_sha256": {
+    "data/smoke_uniform_query.fasta": "5fa9f17d3fc72f278fb9436c8fab79197840d98e849fd9f1cd19641e7faca255",
+    "data/smoke_uniform_references.fasta": "e64f2c3d0b0566f555734d3dcacb769d3433f74db6ed89b149627d851fe24ba4",
+    "data/smoke_uneven_query.fasta": "5fa9f17d3fc72f278fb9436c8fab79197840d98e849fd9f1cd19641e7faca255",
+    "data/smoke_uneven_references.fasta": "b22ad52f5c17f83ec67df0b0661994a0a29c0ed8c0d08000ba9737972a641770"
+  },
+  "mismatched_summary_groups": 0,
+  "incomplete_summary_groups": 0
+}

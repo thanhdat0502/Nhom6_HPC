@@ -1,0 +1,85 @@
+Executable: C:\Users\Admin\AppData\Local\Temp\sw week4 final delivery yt9nbmwc\bin\sw_cli.exe
+Parallel request: 4 thread(s); runtime statistics below report the actual team.
+
+--- Serial alignment score ---
+Score: 8
+
+--- Traceback with a gap ---
+Score: 14
+A [0, 8)
+B [0, 9)
+AAAA-CCCC
+|||| ||||
+AAAAGCCCC
+
+--- Sample FASTA (read by search below) ---
+>query_1 short exact-match demo
+acgt
+>query_2 insertion demo
+AAAA
+CCCC
+>ref_exact identical to query_1
+ACGT
+>ref_partial prefix match
+ACG
+>ref_none no match against query_2
+TTTT
+>ref_gap insertion relative to query_2
+AAAA
+GCCCC
+
+--- Serial FASTA search ---
+Query ID: query_2
+Reference ID	Score
+ref_exact	4
+ref_partial	4
+ref_none	0
+ref_gap	14
+Mode: serial
+Schedule: dynamic
+Requested threads: 1
+Actual threads: 1
+Compute seconds: 4.3e-06
+
+--- Parallel FASTA search (default scheduling) ---
+Query ID: query_2
+Reference ID	Score
+ref_exact	4
+ref_partial	4
+ref_none	0
+ref_gap	14
+Mode: parallel
+Schedule: dynamic
+Requested threads: 4
+Actual threads: 4
+Compute seconds: 0.0008887
+
+--- Parallel FASTA search (static scheduling) ---
+Query ID: query_2
+Reference ID	Score
+ref_exact	4
+ref_partial	4
+ref_none	0
+ref_gap	14
+Mode: parallel
+Schedule: static
+Requested threads: 4
+Actual threads: 4
+Compute seconds: 0.0005737
+
+--- Parallel FASTA search (dynamic scheduling) ---
+Query ID: query_2
+Reference ID	Score
+ref_exact	4
+ref_partial	4
+ref_none	0
+ref_gap	14
+Mode: parallel
+Schedule: dynamic
+Requested threads: 4
+Actual threads: 4
+Compute seconds: 0.0006012
+
+PASS: serial/default/static/dynamic outputs match, including FASTA order.
+Existing benchmark results are not included here; project location: C:\Users\Admin\AppData\Local\Temp\sw week4 final delivery yt9nbmwc\results\week3_validation
+Demo complete. No FASTA or benchmark results were written.

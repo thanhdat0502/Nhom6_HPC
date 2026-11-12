@@ -1,0 +1,3 @@
+Package verified: D:\BTL HPC\Smith-Waterman-OpenMP\dist\Smith-Waterman-OpenMP-Week4-Release-20261112
+ZIP: D:\BTL HPC\Smith-Waterman-OpenMP\dist\Smith-Waterman-OpenMP-Week4-Release-20261112.zip
+ZIP SHA256: 248eee78911252f172539a04e24d0505f1cbe50e3aa9ec9350fdae2d16799502

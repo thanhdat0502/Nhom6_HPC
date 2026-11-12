@@ -1,0 +1,22 @@
+{
+  "debug": {
+    "groups_pass": 12,
+    "groups_fail": 0,
+    "internal_pass": 170,
+    "internal_fail": 0,
+    "old_internal_checks": 158,
+    "new_parallel_exception_cases": 3,
+    "new_cmake_metadata_cases": 1,
+    "delivery_script_cases": 8
+  },
+  "release": {
+    "groups_pass": 12,
+    "groups_fail": 0,
+    "internal_pass": 177,
+    "internal_fail": 0,
+    "old_internal_checks": 158,
+    "new_parallel_exception_cases": 3,
+    "new_cmake_metadata_cases": 1,
+    "delivery_script_cases": 15
+  }
+}

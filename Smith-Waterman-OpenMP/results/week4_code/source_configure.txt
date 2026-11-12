@@ -1,0 +1,11 @@
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/msys64/ucrt64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_CXX: -fopenmp (found version "5.2")
+-- Found OpenMP: TRUE (found version "5.2") found components: CXX
+-- Configuring done (2.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/Admin/AppData/Local/Temp/sw week4 extracted 13934653bc4c401ab1c7f9f120b11aef/source-rebuild

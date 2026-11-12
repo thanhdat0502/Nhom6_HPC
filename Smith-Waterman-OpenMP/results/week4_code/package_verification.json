@@ -1,0 +1,22 @@
+{
+  "package_directory": "dist/Smith-Waterman-OpenMP-Week4-Release-20261112",
+  "zip": "dist/Smith-Waterman-OpenMP-Week4-Release-20261112.zip",
+  "zip_bytes": 1476761,
+  "zip_sha256": "248eee78911252f172539a04e24d0505f1cbe50e3aa9ec9350fdae2d16799502",
+  "zip_crc_verified": true,
+  "manifest_files_verified": 62,
+  "source_files_identical_to_workspace": 45,
+  "runtime_dlls": [
+    "libgcc_s_seh-1.dll",
+    "libgomp-1.dll",
+    "libstdc++-6.dll",
+    "libwinpthread-1.dll"
+  ],
+  "source_build_from_extracted_zip": "passed (see source_configure/source_build/source_ctest.txt; 12/12 CTest)",
+  "final_zip_extracted_to": "C:\\Users\\Admin\\AppData\\Local\\Temp\\sw week4 final delivery yt9nbmwc",
+  "final_zip_demo_exit_code": 0,
+  "final_zip_benchmark_smoke_verified": true,
+  "verification_PATH": "C:\\WINDOWS\\System32;C:\\WINDOWS",
+  "tested_on_other_machine": false,
+  "old_results_unchanged": 223
+}

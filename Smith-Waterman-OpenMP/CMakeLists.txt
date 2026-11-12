@@ -48,11 +48,19 @@ set(SW_BENCHMARK_DIRTY "true")
 find_package(Git QUIET)
 if(Git_FOUND)
     execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" OUTPUT_VARIABLE SW_BENCHMARK_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" OUTPUT_VARIABLE SW_GIT_STATUS)
-    if(SW_GIT_STATUS STREQUAL "")
-        set(SW_BENCHMARK_DIRTY "false")
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        RESULT_VARIABLE SW_GIT_REVISION_STATUS OUTPUT_VARIABLE SW_GIT_REVISION
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    # A source ZIP may have Git installed but no repository. Keep the explicit
+    # unknown/dirty defaults rather than stamping an empty revision as clean.
+    if(SW_GIT_REVISION_STATUS EQUAL 0 AND NOT SW_GIT_REVISION STREQUAL "")
+        set(SW_BENCHMARK_REVISION "${SW_GIT_REVISION}")
+        execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            RESULT_VARIABLE SW_GIT_STATUS_CODE OUTPUT_VARIABLE SW_GIT_STATUS ERROR_QUIET)
+        if(SW_GIT_STATUS_CODE EQUAL 0 AND SW_GIT_STATUS STREQUAL "")
+            set(SW_BENCHMARK_DIRTY "false")
+        endif()
     endif()
 endif()
 target_compile_definitions(sw_benchmark PRIVATE
@@ -72,6 +80,10 @@ if(BUILD_TESTING)
     target_link_libraries(test_parallel PRIVATE sw_parallel)
     sw_warnings(test_parallel)
     add_test(NAME parallel COMMAND test_parallel)
+    add_executable(test_parallel_exceptions tests/test_parallel_exceptions.cpp)
+    target_link_libraries(test_parallel_exceptions PRIVATE sw_parallel)
+    sw_warnings(test_parallel_exceptions)
+    add_test(NAME parallel_exceptions COMMAND test_parallel_exceptions)
     add_executable(test_benchmark tests/test_benchmark.cpp)
     target_link_libraries(test_benchmark PRIVATE sw_benchmark_support)
     sw_warnings(test_benchmark)
@@ -93,5 +105,23 @@ if(BUILD_TESTING)
         "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
         -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parallel_cli.cmake")
     add_test(NAME openmp COMMAND test_openmp)
-    set_tests_properties(smith_waterman fasta_reader dna_generator parallel cli parallel_cli openmp benchmark_math benchmark_cli PROPERTIES TIMEOUT 60)
+    set_tests_properties(smith_waterman fasta_reader dna_generator parallel parallel_exceptions cli parallel_cli openmp benchmark_math benchmark_cli PROPERTIES TIMEOUT 60)
+    if(CMAKE_GENERATOR STREQUAL "Ninja")
+        add_test(NAME cmake_metadata COMMAND "${CMAKE_COMMAND}"
+            "-DPROJECT_DIR=${CMAKE_CURRENT_SOURCE_DIR}" "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+            "-DCXX_COMPILER=${CMAKE_CXX_COMPILER}" -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_cmake_metadata.cmake")
+        set_tests_properties(cmake_metadata PROPERTIES TIMEOUT 60)
+    endif()
+    if(WIN32)
+        find_program(SW_POWERSHELL_EXECUTABLE powershell)
+        if(SW_POWERSHELL_EXECUTABLE)
+            add_test(NAME delivery_scripts COMMAND "${SW_POWERSHELL_EXECUTABLE}"
+                -NoProfile -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_delivery_scripts.ps1"
+                -ProjectRoot "${CMAKE_CURRENT_SOURCE_DIR}" -ExecutablePath "$<TARGET_FILE:sw_cli>"
+                -BuildDirectory "${CMAKE_CURRENT_BINARY_DIR}" -BuildType "$<CONFIG>")
+            set_tests_properties(delivery_scripts PROPERTIES TIMEOUT 120)
+        else()
+            message(WARNING "Windows PowerShell not found; delivery script tests are unavailable.")
+        endif()
+    endif()
 endif()

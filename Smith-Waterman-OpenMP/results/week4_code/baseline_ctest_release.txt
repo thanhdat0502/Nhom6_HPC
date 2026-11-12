@@ -1,0 +1,259 @@
+UpdateCTestConfiguration  from :D:/BTL HPC/Smith-Waterman-OpenMP/build-release/DartConfiguration.tcl
+Parse Config file:D:/BTL HPC/Smith-Waterman-OpenMP/build-release/DartConfiguration.tcl
+Test project D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: smith_waterman
+
+1: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_smith_waterman.exe"
+1: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+1: Test timeout computed to be: 60
+1: PASS required case 1
+1: PASS required case 2
+1: PASS required case 3
+1: PASS required case 4
+1: PASS required case 5
+1: PASS required case 6
+1: PASS required case 7
+1: PASS gap traceback in both orientations
+1: PASS mismatch traceback
+1: PASS deterministic tied maximum and zero origin
+1: PASS known matrix and bounds
+1: PASS invalid DNA including empty opposite input
+1: PASS lowercase DNA
+1: PASS all 7225 DNA pairs up to length 3 against independent oracle
+1: PASS 250 seeded longer pairs: score, symmetry, coordinates, traceback
+1: PASS 1200-base identity and asymmetric rolling rows
+1: PASS formatted alignment and no-match message
+1: Passed: 17, Failed: 0
+1/9 Test #1: smith_waterman ...................   Passed    0.05 sec
+test 2
+    Start 2: fasta_reader
+
+2: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_fasta_reader.exe"
+2: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+2: Test timeout computed to be: 60
+2: PASS multiple records, multiline DNA, lowercase and descriptions
+2: PASS CRLF, whitespace-only blank lines and no final newline
+2: PASS invalid nucleotide includes source and line
+2: PASS never discard spaces, gaps, comments or ambiguous bases
+2: PASS missing header or misplaced header
+2: PASS empty file and blank file
+2: PASS missing ID
+2: PASS empty first, middle or final record
+2: PASS duplicate IDs rejected even with different descriptions
+2: PASS actual file path with spaces
+2: PASS nonexistent file
+2: PASS stream I/O failure
+2: Passed: 12, Failed: 0
+2/9 Test #2: fasta_reader .....................   Passed    0.02 sec
+test 3
+    Start 3: dna_generator
+
+3: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_dna_generator.exe"
+3: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+3: Test timeout computed to be: 60
+3: PASS same parameters reproduce records
+3: PASS known mt19937 seed-42 mapping
+3: PASS different seed changes the fixture
+3: PASS zero and maximum uint32 seeds
+3: PASS reject zero counts, zero lengths and size overflow
+3: PASS FASTA write/read round trip, wrapping and byte reproducibility
+3: PASS refuse overwrite and preserve existing bytes
+3: PASS invalid export parameters fail before file creation
+3: PASS export lowercase normalization
+3: PASS output parent must exist
+3: Passed: 10, Failed: 0
+3/9 Test #3: dna_generator ....................   Passed    0.05 sec
+test 4
+    Start 4: parallel
+
+4: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_parallel.exe"
+4: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+4: Test timeout computed to be: 60
+4: Available batch threads: 12
+4: Tested thread levels: 1 2 4 8 12
+4: PASS one query and one reference, known score
+4: PASS multiple references preserve distinct score order
+4: PASS identical references
+4: PASS no positive alignment
+4: PASS different lengths, mismatch and gaps
+4: PASS ties and duplicate sequences remain separate entries
+4: PASS empty query and empty references at API level
+4: PASS empty batch does not create a team
+4: PASS case-insensitive DNA
+4: PASS small seeded dataset
+4: PASS medium seeded dataset
+4: PASS heterogeneous lengths and more references than threads
+4: PASS fewer references than requested threads
+4: PASS parallel with one worker is still recorded as parallel
+4: PASS twenty repeated runs per schedule
+4: PASS configurable linear scoring with known expected results
+4: PASS integer score boundary and overflow rejected before dispatch
+4: PASS invalid DNA validated even for empty query or batch
+4: PASS invalid scoring rejected
+4: PASS invalid thread counts and serial multithreading rejected
+4: PASS invalid mode and schedule rejected
+4: PASS batch leaves OpenMP runtime settings unchanged
+4: PASS independent concurrent callers
+4: Passed: 23, Failed: 0
+4/9 Test #4: parallel .........................   Passed    0.12 sec
+test 5
+    Start 5: benchmark_math
+
+5: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_benchmark.exe"
+5: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+5: Test timeout computed to be: 60
+5: PASS median odd and even
+5: PASS mean min max population standard deviation
+5: PASS invalid timing samples rejected
+5: PASS speedup efficiency GCUPS and warmup exclusion
+5: PASS actual teams grouped separately and used in efficiency
+5: PASS DP cell count uses full lengths without boundary cells
+5: PASS six reproducible datasets with equal work per distribution pair
+5: PASS generated FASTA replay roundtrip
+5: PASS configuration validation and duplicates
+5: PASS real smoke measurements verified and all rounds recorded
+5: PASS measurement rejects invalid repetition counts and empty work
+5: PASS CSV quoting precision and thread mismatch flags
+5: Passed: 12, Failed: 0
+5/9 Test #5: benchmark_math ...................   Passed    0.02 sec
+test 6
+    Start 6: benchmark_cli
+
+6: Test command: C:\msys64\ucrt64\bin\cmake.exe "-DBENCH_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_benchmark.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_benchmark_cli.cmake"
+6: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+6: Test timeout computed to be: 60
+6: -- PASS help
+6: -- PASS verified_smoke_CSV_and_metadata
+6: -- PASS no_overwrite
+6: -- PASS too_few_warmups
+6: -- PASS too_few_runs
+6: -- PASS duplicate_threads
+6: -- PASS bad_threads
+6: -- PASS bad_schedule
+6: -- PASS missing_output
+6: -- PASS mixed_inputs
+6: Measuring external: 160 DP cells, 2 configurations
+6: Verified 18 samples for external
+6: Complete: D:/BTL HPC/Smith-Waterman-OpenMP/build-release/benchmark-smoke-37d97e6064aabcf7-external
+6: -- PASS external_FASTA
+6: Measuring smoke_uniform: 2304 DP cells, 3 configurations
+6: Verified 27 samples for smoke_uniform
+6: Measuring smoke_uneven: 2304 DP cells, 3 configurations
+6: Verified 27 samples for smoke_uneven
+6: Complete: D:/BTL HPC/Smith-Waterman-OpenMP/build-release/benchmark-smoke-37d97e6064aabcf7-release-policy
+6: -- PASS release_build_policy
+6: -- Passed: 12 benchmark CLI cases
+6/9 Test #6: benchmark_cli ....................   Passed    0.24 sec
+test 7
+    Start 7: cli
+
+7: Test command: C:\msys64\ucrt64\bin\cmake.exe "-DSW_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_cli.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake"
+7: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+7: Test timeout computed to be: 60
+7: -- PASS help
+7: -- PASS score
+7: -- PASS traceback
+7: -- PASS search
+7: -- PASS search_traceback
+7: -- PASS valid_mismatch
+7: -- PASS no_positive_match
+7: -- PASS lowercase_dna
+7: -- PASS no_command
+7: -- PASS unknown_command
+7: -- PASS missing_option
+7: -- PASS missing_value
+7: -- PASS duplicate_option
+7: -- PASS unknown_option
+7: -- PASS invalid_dna
+7: -- PASS invalid_second_dna
+7: -- PASS special_character
+7: -- PASS invalid_alignment_dna
+7: -- PASS special_alignment_character
+7: -- PASS missing_file
+7: -- PASS missing_query_id
+7: -- PASS missing_reference_id
+7: -- PASS invalid_count
+7: -- PASS zero_length
+7: -- PASS seed_overflow
+7: -- PASS trailing_numeric_text
+7: -- PASS empty_first_sequence
+7: -- PASS empty_second_sequence
+7: -- PASS both_empty_sequences
+7: -- PASS empty_alignment
+7: -- PASS generate
+7: -- PASS no_overwrite
+7: -- PASS generated_search
+7: -- PASS invalid_fasta_dna
+7: -- PASS invalid_fasta_header
+7: -- PASS invalid_fasta_empty_record
+7: -- Passed: 36 CLI cases
+7/9 Test #7: cli ..............................   Passed    0.64 sec
+test 8
+    Start 8: parallel_cli
+
+8: Test command: C:\msys64\ucrt64\bin\cmake.exe "-DSW_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_cli.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DGENERATED_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/generated" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_parallel_cli.cmake"
+8: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+8: Test timeout computed to be: 60
+8: -- PASS help_reports_thread_limit
+8: -- PASS week1_default_search_unchanged
+8: -- PASS explicit_serial
+8: -- PASS serial_statistics
+8: -- PASS default_parallel_threads
+8: -- PASS static_1_threads
+8: -- PASS dynamic_1_threads
+8: -- PASS static_2_threads
+8: -- PASS dynamic_2_threads
+8: -- PASS static_4_threads
+8: -- PASS dynamic_4_threads
+8: -- PASS static_8_threads
+8: -- PASS dynamic_8_threads
+8: -- PASS static_12_threads
+8: -- PASS dynamic_12_threads
+8: -- PASS serial_traceback_baseline
+8: -- PASS traceback_static
+8: -- PASS traceback_dynamic
+8: -- PASS medium_serial_baseline
+8: -- PASS medium_static
+8: -- PASS medium_dynamic
+8: -- PASS unknown_mode
+8: -- PASS unknown_schedule
+8: -- PASS zero_threads
+8: -- PASS negative_threads
+8: -- PASS thread_overflow
+8: -- PASS unsupported_threads
+8: -- PASS missing_thread_value
+8: -- PASS duplicate_threads
+8: -- PASS serial_multiple_threads
+8: -- PASS pair_align_still_serial
+8: -- PASS parallel_missing_reference_id
+8: -- PASS parallel_invalid_fasta
+8: -- PASS runtime_thread_limit
+8: -- PASS runtime_default_one_thread
+8: -- Passed: 35 parallel CLI cases; thread levels: 1;2;4;8;12
+8/9 Test #8: parallel_cli .....................   Passed    0.70 sec
+test 9
+    Start 9: openmp
+
+9: Test command: "D:\BTL HPC\Smith-Waterman-OpenMP\build-release\test_openmp.exe"
+9: Working Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+9: Test timeout computed to be: 60
+9: Thread ID: 0
+9: Thread ID: 3
+9: Thread ID: 1
+9: Thread ID: 2
+9: OpenMP macro: 202111
+9: Processors: 12
+9: Requested threads: 4
+9: Actual threads: 4
+9/9 Test #9: openmp ...........................   Passed    0.03 sec
+
+100% tests passed out of 9
+
+Total Test time (real) =   1.89 sec

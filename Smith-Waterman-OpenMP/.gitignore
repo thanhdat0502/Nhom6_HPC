@@ -1,5 +1,6 @@
 /build*/
 /test-temp-*/
+/dist/
 __pycache__/
 *.py[cod]
 /.vscode/*
