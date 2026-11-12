@@ -1,0 +1,56 @@
+[
+  {
+    "path": "build-debug/CMakeCache.txt",
+    "expected_ignored": true,
+    "pass": true,
+    "matching_rule": "Smith-Waterman-OpenMP/.gitignore:1:/build*/\tbuild-debug/CMakeCache.txt"
+  },
+  {
+    "path": "build-release/sw_cli.exe",
+    "expected_ignored": true,
+    "pass": true,
+    "matching_rule": "Smith-Waterman-OpenMP/.gitignore:1:/build*/\tbuild-release/sw_cli.exe"
+  },
+  {
+    "path": "build-release/week3-final-negative-wrong_speedup/raw_benchmark.csv",
+    "expected_ignored": true,
+    "pass": true,
+    "matching_rule": "Smith-Waterman-OpenMP/.gitignore:1:/build*/\tbuild-release/week3-final-negative-wrong_speedup/raw_benchmark.csv"
+  },
+  {
+    "path": "scripts/__pycache__/plot_benchmark.cpython-314.pyc",
+    "expected_ignored": true,
+    "pass": true,
+    "matching_rule": "Smith-Waterman-OpenMP/.gitignore:3:__pycache__/\tscripts/__pycache__/plot_benchmark.cpython-314.pyc"
+  },
+  {
+    "path": "../.week1-backups/before-week3-final-audit-20261112-163444/manifest.json",
+    "expected_ignored": true,
+    "pass": true,
+    "matching_rule": ".gitignore:2:/.week1-backups/\t../.week1-backups/before-week3-final-audit-20261112-163444/manifest.json"
+  },
+  {
+    "path": "results/week3/raw_benchmark.csv",
+    "expected_ignored": false,
+    "pass": true,
+    "matching_rule": ""
+  },
+  {
+    "path": "results/week3_validation/raw_benchmark.csv",
+    "expected_ignored": false,
+    "pass": true,
+    "matching_rule": ""
+  },
+  {
+    "path": "results/week3_validation/real_fasta/NC_001422.1.fasta",
+    "expected_ignored": false,
+    "pass": true,
+    "matching_rule": ""
+  },
+  {
+    "path": "scripts/check_real_fasta.py",
+    "expected_ignored": false,
+    "pass": true,
+    "matching_rule": ""
+  }
+]

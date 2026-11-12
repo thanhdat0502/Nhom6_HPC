@@ -1,5 +1,7 @@
 /build*/
 /test-temp-*/
+__pycache__/
+*.py[cod]
 /.vscode/*
 !/.vscode/c_cpp_properties.json
 !/.vscode/settings.json

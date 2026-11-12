@@ -1,0 +1,3 @@
+# Keep reproducible dataset/CSV bytes stable on Windows checkouts.
+*.fasta text eol=lf
+*.csv text eol=lf

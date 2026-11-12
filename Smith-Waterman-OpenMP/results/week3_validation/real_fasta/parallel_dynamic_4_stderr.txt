@@ -1,0 +1,5 @@
+Mode: parallel
+Schedule: dynamic
+Requested threads: 4
+Actual threads: 4
+Compute seconds: 0.0705162

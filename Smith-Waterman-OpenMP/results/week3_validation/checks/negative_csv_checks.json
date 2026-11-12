@@ -1,0 +1,24 @@
+{
+  "passed": 3,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "wrong_speedup",
+      "expected_rejection": true,
+      "reason": "('small_uniform', 'parallel', 'static', 1, 1): speedup: got 1.8292210933720368, expected 0.8292210933720366",
+      "pass": true
+    },
+    {
+      "case": "missing_measurement",
+      "expected_rejection": true,
+      "reason": "Missing/reordered raw sample IDs",
+      "pass": true
+    },
+    {
+      "case": "unverified_sample",
+      "expected_rejection": true,
+      "reason": "Unverified/non-Release sample",
+      "pass": true
+    }
+  ]
+}

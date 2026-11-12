@@ -1,0 +1,36 @@
+{
+  "debug": {
+    "ctest_groups_passed": 9,
+    "ctest_groups_failed": 0,
+    "internal_passed": 158,
+    "internal_failed": 0,
+    "modules": {
+      "smith_waterman": 17,
+      "fasta_reader": 12,
+      "dna_generator": 10,
+      "parallel": 23,
+      "benchmark_math": 12,
+      "benchmark_cli": 12,
+      "cli": 36,
+      "parallel_cli": 35,
+      "openmp": 1
+    }
+  },
+  "release": {
+    "ctest_groups_passed": 9,
+    "ctest_groups_failed": 0,
+    "internal_passed": 158,
+    "internal_failed": 0,
+    "modules": {
+      "smith_waterman": 17,
+      "fasta_reader": 12,
+      "dna_generator": 10,
+      "parallel": 23,
+      "benchmark_math": 12,
+      "benchmark_cli": 12,
+      "cli": 36,
+      "parallel_cli": 35,
+      "openmp": 1
+    }
+  }
+}

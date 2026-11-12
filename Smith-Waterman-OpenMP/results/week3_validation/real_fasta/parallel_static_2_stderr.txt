@@ -1,0 +1,5 @@
+Mode: parallel
+Schedule: static
+Requested threads: 2
+Actual threads: 2
+Compute seconds: 0.0688893

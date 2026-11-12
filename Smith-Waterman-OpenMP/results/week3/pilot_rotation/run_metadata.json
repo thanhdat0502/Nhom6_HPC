@@ -1,0 +1,43 @@
+{
+  "status": "complete",
+  "build_type": "Release",
+  "source_revision": "4069ccb",
+  "source_dirty_at_configure": true,
+  "compiler": "16.2.0",
+  "openmp_macro": 202111,
+  "omp_processors": 12,
+  "thread_limit": 2147483647,
+  "warmups": 2,
+  "runs": 7,
+  "timer": "BatchResult.compute_seconds; same compute region for serial and parallel",
+  "order": "deterministic rotation by round, warmups excluded from summary",
+  "environment": {
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_NUM_THREADS": null,
+    "OMP_THREAD_LIMIT": null,
+    "OMP_PROC_BIND": null,
+    "OMP_PLACES": null,
+    "OMP_WAIT_POLICY": "PASSIVE"
+  },
+  "configurations": [
+    {"mode": "serial", "schedule": "none", "requested_threads": 1},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 1},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 1},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 2},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 2},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 4},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 4},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 8},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 8},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 12},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 12}
+  ],
+  "datasets": [
+    {"id": "small_uniform", "distribution": "uniform", "seed": "3101", "query_length": 192, "reference_count": 8, "dp_cells": 294912, "query_fasta": "data/small_uniform_query.fasta", "references_fasta": "data/small_uniform_references.fasta", "reference_lengths": [192,192,192,192,192,192,192,192]},
+    {"id": "small_uneven", "distribution": "uneven", "seed": "3101", "query_length": 192, "reference_count": 8, "dp_cells": 294912, "query_fasta": "data/small_uneven_query.fasta", "references_fasta": "data/small_uneven_references.fasta", "reference_lengths": [128,149,170,192,192,214,235,256]},
+    {"id": "medium_uniform", "distribution": "uniform", "seed": "3102", "query_length": 768, "reference_count": 64, "dp_cells": 37748736, "query_fasta": "data/medium_uniform_query.fasta", "references_fasta": "data/medium_uniform_references.fasta", "reference_lengths": [768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768,768]},
+    {"id": "medium_uneven", "distribution": "uneven", "seed": "3102", "query_length": 768, "reference_count": 64, "dp_cells": 37748736, "query_fasta": "data/medium_uneven_query.fasta", "references_fasta": "data/medium_uneven_references.fasta", "reference_lengths": [512,520,528,536,545,553,561,569,578,586,594,602,611,619,627,635,644,652,660,668,677,685,693,701,710,718,726,734,743,751,759,768,768,777,785,793,802,810,818,826,835,843,851,859,868,876,884,892,901,909,917,925,934,942,950,958,967,975,983,991,1000,1008,1016,1024]},
+    {"id": "large_uniform", "distribution": "uniform", "seed": "3103", "query_length": 1536, "reference_count": 96, "dp_cells": 226492416, "query_fasta": "data/large_uniform_query.fasta", "references_fasta": "data/large_uniform_references.fasta", "reference_lengths": [1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536,1536]},
+    {"id": "large_uneven", "distribution": "uneven", "seed": "3103", "query_length": 1536, "reference_count": 96, "dp_cells": 226492416, "query_fasta": "data/large_uneven_query.fasta", "references_fasta": "data/large_uneven_references.fasta", "reference_lengths": [1024,1034,1045,1056,1067,1078,1089,1100,1111,1122,1132,1143,1154,1165,1176,1187,1198,1209,1220,1230,1241,1252,1263,1274,1285,1296,1307,1318,1329,1339,1350,1361,1372,1383,1394,1405,1416,1427,1437,1448,1459,1470,1481,1492,1503,1514,1525,1536,1536,1547,1558,1569,1580,1591,1602,1613,1624,1635,1645,1656,1667,1678,1689,1700,1711,1722,1733,1743,1754,1765,1776,1787,1798,1809,1820,1831,1842,1852,1863,1874,1885,1896,1907,1918,1929,1940,1950,1961,1972,1983,1994,2005,2016,2027,2038,2048]}
+  ]
+}

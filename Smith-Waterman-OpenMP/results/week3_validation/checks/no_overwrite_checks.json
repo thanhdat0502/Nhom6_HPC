@@ -1,0 +1,23 @@
+[
+  {
+    "case": "comparison_no_overwrite",
+    "exit_code": 1,
+    "expected_rejection": true,
+    "all_prior_bytes_preserved": true,
+    "pass": true
+  },
+  {
+    "case": "real_verify_no_overwrite",
+    "exit_code": 1,
+    "expected_rejection": true,
+    "all_prior_bytes_preserved": true,
+    "pass": true
+  },
+  {
+    "case": "download_no_overwrite",
+    "exit_code": 1,
+    "expected_rejection": true,
+    "all_prior_bytes_preserved": true,
+    "pass": true
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "date_local": "2026-11-12",
+  "source_base_commit": "4069ccb",
+  "source_dirty": true,
+  "kernel_week1_week2_unchanged": true,
+  "old_tests_and_data_unchanged": true,
+  "ctest_debug": {
+    "pass": 9,
+    "fail": 0
+  },
+  "ctest_release": {
+    "pass": 9,
+    "fail": 0
+  },
+  "internal_checks_each_configuration": {
+    "pass": 158,
+    "fail": 0
+  },
+  "formal_benchmark": {
+    "datasets": 6,
+    "warmups": 2,
+    "runs": 7,
+    "raw_rows": 594,
+    "measured_rows": 462,
+    "summary_rows": 66,
+    "all_formulas_verified": true,
+    "all_repetitions_present": true,
+    "dataset_sha256": {
+      "data/small_uniform_query.fasta": "ec36572b48ecae4610e823c3f561df5a259acd180339dfadcd083c20d85a7229",
+      "data/small_uniform_references.fasta": "d0a55c85ff505845f1ef003ba2ccd5037909afc70b75601085e11d2eeebe49b4",
+      "data/small_uneven_query.fasta": "ec36572b48ecae4610e823c3f561df5a259acd180339dfadcd083c20d85a7229",
+      "data/small_uneven_references.fasta": "46929f6e8fee9f07ec822707afc858c47c6222be8260423b8d63da27dadcf29a",
+      "data/medium_uniform_query.fasta": "72c9a11f4bb7a36382981ef32d8a19f5502965e18892cbb5bf2a7c29fba8d356",
+      "data/medium_uniform_references.fasta": "d1d76204c321320d72cb6ad9772e1941152331ba358cdf794c7b9a08ee29e6e4",
+      "data/medium_uneven_query.fasta": "72c9a11f4bb7a36382981ef32d8a19f5502965e18892cbb5bf2a7c29fba8d356",
+      "data/medium_uneven_references.fasta": "ee55094fd252df6e2ecea074243453722e7c387a1ee20f2e24151453109dd5e3",
+      "data/large_uniform_query.fasta": "bc07048628e5642089ec572eda0da6fa940b594ba09eda4126ea7252acf97b7a",
+      "data/large_uniform_references.fasta": "8e03850a889015b3e5bd1d9ad97790978bbe0788bc21467162d3cc8618091893",
+      "data/large_uneven_query.fasta": "bc07048628e5642089ec572eda0da6fa940b594ba09eda4126ea7252acf97b7a",
+      "data/large_uneven_references.fasta": "f3fc9fac7bb6712505a46d801f6c2dce000c9e80d928ba6028228fd80e1971f4"
+    },
+    "mismatched_summary_groups": 0,
+    "incomplete_summary_groups": 0
+  },
+  "pilot_preserved": true,
+  "pilot_formal_FASTA_identical": true,
+  "negative_CSV_validator_test": "PASS",
+  "external_plot_smoke": "PASS",
+  "document_links": "PASS",
+  "fingerprints": {
+    "src/benchmark.cpp": "4a20c6b83c025b507b0836175183a476ab674207fe05f80c065abb239bd60ccc",
+    "src/benchmark_support.cpp": "1d067daf6fa6db17f5f874fe56ed46b8d3af90013ec74a26e518ed4a052a4055",
+    "include/benchmark.h": "e5a89047e5f62e5f50c287b5ac1b1f020701275108c4ebd1b0f4e96f906cd4d4",
+    "src/smith_waterman_serial.cpp": "8f0407315b267cd316a70ee7558eb561af72c3ec27d147c877b6c8804daad20e",
+    "src/smith_waterman_parallel.cpp": "feb1c5d7853647f6f26899753c5237f1bac9eae2e9daa12c7fb0452637d0130d",
+    "build-release/sw_benchmark.exe": "4784de711967f956275e6d30d9067d74bf8be6b6ea7bf6e0b73ad31afccd2d0c",
+    "results/week3/raw_benchmark.csv": "9c1a27ea76b6a366c3bf8be121c85bab360dcbc36b38d3a66c648739e4454cfe",
+    "results/week3/summary_benchmark.csv": "140d6520a95dde4ca1448442a27e7077be1e93d48829e4e94d0949295947ceab",
+    "CMakeLists.txt": "8a54453138922ad988ca52739f99affdd9c77bae6f5a3776be97e303c53bfeab",
+    "scripts/plot_benchmark.py": "4808c3f204397f7e57561da6772f3eac5bfb623fe22e3effa6095f328b4ad240",
+    "tests/test_benchmark.cpp": "28596d3faeeec209320f8289ddbae83bcdd98f1e7bc7633f94f24187cfe2242b",
+    "tests/test_benchmark_cli.cmake": "cbf8470982dbfbf931de441912ddd3f2bc19ea81be6f481925eec6124ef1807f"
+  },
+  "git_commit_or_push_performed": false,
+  "plots_visually_checked": true,
+  "plots_count": 5
+}

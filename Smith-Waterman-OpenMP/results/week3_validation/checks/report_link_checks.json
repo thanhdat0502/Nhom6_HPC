@@ -1,0 +1,110 @@
+{
+  "local_links_verified": 21,
+  "links": [
+    {
+      "label": "results/week3_validation",
+      "target": "../results/week3_validation/",
+      "exists": true
+    },
+    {
+      "label": "pre_audit_sha256.json",
+      "target": "../results/week3_validation/checks/pre_audit_sha256.json",
+      "exists": true
+    },
+    {
+      "label": "preservation.json",
+      "target": "../results/week3_validation/checks/preservation.json",
+      "exists": true
+    },
+    {
+      "label": "gitignore_verification.json",
+      "target": "../results/week3_validation/checks/gitignore_verification.json",
+      "exists": true
+    },
+    {
+      "label": "environment.json",
+      "target": "../results/week3_validation/environment.json",
+      "exists": true
+    },
+    {
+      "label": "comparison.csv",
+      "target": "../results/week3_validation/comparison/comparison.csv",
+      "exists": true
+    },
+    {
+      "label": "comparison.json",
+      "target": "../results/week3_validation/comparison/comparison.json",
+      "exists": true
+    },
+    {
+      "label": "recheck_comparison",
+      "target": "../results/week3_validation/recheck_comparison/",
+      "exists": true
+    },
+    {
+      "label": "provenance.json",
+      "target": "../results/week3_validation/real_fasta/provenance.json",
+      "exists": true
+    },
+    {
+      "label": "verification.json",
+      "target": "../results/week3_validation/real_fasta/verification.json",
+      "exists": true
+    },
+    {
+      "label": "real_benchmark",
+      "target": "../results/week3_validation/real_benchmark/",
+      "exists": true
+    },
+    {
+      "label": "race_detector_probe.txt",
+      "target": "../results/week3_validation/checks/race_detector_probe.txt",
+      "exists": true
+    },
+    {
+      "label": "negative_csv_checks.json",
+      "target": "../results/week3_validation/checks/negative_csv_checks.json",
+      "exists": true
+    },
+    {
+      "label": "figure_verification.json",
+      "target": "../results/week3_validation/checks/figure_verification.json",
+      "exists": true
+    },
+    {
+      "label": "figures/",
+      "target": "../results/week3_validation/figures/",
+      "exists": true
+    },
+    {
+      "label": "Build Debug",
+      "target": "../results/week3_validation/checks/build_debug.txt",
+      "exists": true
+    },
+    {
+      "label": "CTest Debug",
+      "target": "../results/week3_validation/checks/ctest_debug.txt",
+      "exists": true
+    },
+    {
+      "label": "Build Release",
+      "target": "../results/week3_validation/checks/build_release.txt",
+      "exists": true
+    },
+    {
+      "label": "CTest Release",
+      "target": "../results/week3_validation/checks/ctest_release.txt",
+      "exists": true
+    },
+    {
+      "label": "Đếm test theo module",
+      "target": "../results/week3_validation/checks/test_counts.json",
+      "exists": true
+    },
+    {
+      "label": "Console benchmark chính",
+      "target": "../results/week3_validation/checks/benchmark_console.txt",
+      "exists": true
+    }
+  ]
+}

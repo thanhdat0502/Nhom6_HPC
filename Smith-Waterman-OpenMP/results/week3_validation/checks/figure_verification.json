@@ -1,0 +1,95 @@
+{
+  "verified_figures": 5,
+  "figures": [
+    {
+      "filename": "efficiency.png",
+      "original_size": [
+        2600,
+        2039
+      ],
+      "validation_size": [
+        2600,
+        2039
+      ],
+      "dpi": [
+        199.9996,
+        199.9996
+      ],
+      "original_matches_reproduced_pixels": true,
+      "original_matches_reproduced_sha256": true,
+      "visual_review": "Original and validation inspected: readable labels, legends, no clipped titles or axis labels; all observed points retained."
+    },
+    {
+      "filename": "execution_time.png",
+      "original_size": [
+        2600,
+        2039
+      ],
+      "validation_size": [
+        2600,
+        2039
+      ],
+      "dpi": [
+        199.9996,
+        199.9996
+      ],
+      "original_matches_reproduced_pixels": true,
+      "original_matches_reproduced_sha256": true,
+      "visual_review": "Original and validation inspected: readable labels, legends, no clipped titles or axis labels; all observed points retained."
+    },
+    {
+      "filename": "scheduling_comparison.png",
+      "original_size": [
+        2600,
+        960
+      ],
+      "validation_size": [
+        2600,
+        960
+      ],
+      "dpi": [
+        199.9996,
+        199.9996
+      ],
+      "original_matches_reproduced_pixels": true,
+      "original_matches_reproduced_sha256": true,
+      "visual_review": "Original and validation inspected: readable labels, legends, no clipped titles or axis labels; all observed points retained."
+    },
+    {
+      "filename": "size_scaling.png",
+      "original_size": [
+        2600,
+        960
+      ],
+      "validation_size": [
+        2600,
+        960
+      ],
+      "dpi": [
+        199.9996,
+        199.9996
+      ],
+      "original_matches_reproduced_pixels": true,
+      "original_matches_reproduced_sha256": true,
+      "visual_review": "Original and validation inspected: readable labels, legends, no clipped titles or axis labels; all observed points retained."
+    },
+    {
+      "filename": "speedup.png",
+      "original_size": [
+        2600,
+        2039
+      ],
+      "validation_size": [
+        2600,
+        2039
+      ],
+      "dpi": [
+        199.9996,
+        199.9996
+      ],
+      "original_matches_reproduced_pixels": true,
+      "original_matches_reproduced_sha256": true,
+      "visual_review": "Original and validation inspected: readable labels, legends, no clipped titles or axis labels; all observed points retained."
+    }
+  ]
+}

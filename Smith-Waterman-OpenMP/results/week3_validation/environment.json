@@ -1,0 +1,73 @@
+{
+  "main_measurement_started_utc": "2026-11-12T09:39:42.6535702Z",
+  "main_measurement_ended_utc": "2026-11-12T09:40:13.0461261Z",
+  "hardware_query_utc": "2026-11-12T09:42:53.2591827Z",
+  "environment_capture_utc": "2026-11-12T09:46:13.517232+00:00",
+  "hardware_source": "Successful read-only Win32_Processor, Win32_ComputerSystem, Win32_OperatingSystem queries after measurement",
+  "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+  "physical_cores": 8,
+  "logical_processors": 12,
+  "reported_max_clock_mhz": 2100,
+  "total_physical_memory_bytes": 16890519552,
+  "os": "Microsoft Windows 11 Pro",
+  "os_version": "10.0.26200",
+  "os_build": "26200",
+  "power_scheme": "Balanced",
+  "power_status_after_measurement": {
+    "read_success": true,
+    "ac_line_status": 1,
+    "battery_percent": 100
+  },
+  "runtime_policy": {
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_NUM_THREADS": null,
+    "OMP_THREAD_LIMIT": null,
+    "OMP_PROC_BIND": null,
+    "OMP_PLACES": null,
+    "OMP_WAIT_POLICY": "PASSIVE"
+  },
+  "release_flags": "-O3 -DNDEBUG -fopenmp -std=c++17",
+  "main_command": ".\\build-release\\sw_benchmark.exe --output results/week3_validation --suite all --threads 1,2,4,8,12 --schedules static,dynamic --warmup 2 --runs 7",
+  "tools": [
+    {
+      "command": [
+        "g++",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "g++ (Rev6, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cmake version 4.4.5\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ninja",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "1.13.2\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "4069ccb3b3c0a3b16967dd4aa84bcbc6798fd865\n",
+      "stderr": ""
+    }
+  ],
+  "source_state": "HEAD 4069ccb plus uncommitted week 3 sources; pre-audit SHA-256 manifest verifies existing C++ inputs unchanged during audit.",
+  "limits": "Hardware and power status sampled after the main run, not continuous telemetry. Clock is WMI-reported, not measured sustained frequency. No affinity, frequency or temperature control. User background applications not stopped. No builds/tests/plots ran concurrently with the main benchmark. The read-only WMI query overlapped the supplementary real benchmark, so it is not used to rank performance.",
+  "binary_hash_after_clean_rebuild": "aebe625bca447f49b4ce67ba2b64bf78ecda0b26f55eba88e57a276758caafcd"
+}

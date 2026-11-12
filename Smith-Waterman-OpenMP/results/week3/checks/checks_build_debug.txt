@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/test_benchmark.dir/tests/test_benchmark.cpp.obj
+[2/2] Linking CXX executable test_benchmark.exe

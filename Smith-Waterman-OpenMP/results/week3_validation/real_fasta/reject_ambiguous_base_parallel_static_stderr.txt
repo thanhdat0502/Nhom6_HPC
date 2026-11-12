@@ -1,0 +1,1 @@
+Error: results\week3_validation\real_fasta\ambiguous_base.fasta: line 2: Invalid DNA character (byte 78) at position 3; only A, C, G, T are supported.

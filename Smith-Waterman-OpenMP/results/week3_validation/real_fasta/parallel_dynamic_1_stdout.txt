@@ -1,0 +1,4 @@
+Query ID: NC_001422.1
+Reference ID	Score
+NC_001422.1	10772
+NC_001330.1	3541

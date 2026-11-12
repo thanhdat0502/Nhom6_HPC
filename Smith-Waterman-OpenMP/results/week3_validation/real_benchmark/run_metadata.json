@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "build_type": "Release",
+  "source_revision": "4069ccb",
+  "source_dirty_at_configure": true,
+  "compiler": "16.2.0",
+  "openmp_macro": 202111,
+  "omp_processors": 12,
+  "thread_limit": 2147483647,
+  "warmups": 2,
+  "runs": 7,
+  "timer": "BatchResult.compute_seconds; same compute region for serial and parallel",
+  "order": "shuffled configuration blocks; immediate warmups; warmups excluded from summary",
+  "order_seed_recipe": "uint32 seed=7301; for each dataset-id byte: seed=seed*33+byte; mt19937/std::shuffle",
+  "environment": {
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_NUM_THREADS": null,
+    "OMP_THREAD_LIMIT": null,
+    "OMP_PROC_BIND": null,
+    "OMP_PLACES": null,
+    "OMP_WAIT_POLICY": "PASSIVE"
+  },
+  "configurations": [
+    {"mode": "serial", "schedule": "none", "requested_threads": 1},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 2},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 2},
+    {"mode": "parallel", "schedule": "static", "requested_threads": 4},
+    {"mode": "parallel", "schedule": "dynamic", "requested_threads": 4}
+  ],
+  "datasets": [
+    {"id": "ncbi_phages", "distribution": "external", "seed": "", "query_length": 5386, "reference_count": 2, "dp_cells": 61793578, "query_fasta": "data/ncbi_phages_query.fasta", "references_fasta": "data/ncbi_phages_references.fasta", "reference_lengths": [5386,6087]}
+  ]
+}

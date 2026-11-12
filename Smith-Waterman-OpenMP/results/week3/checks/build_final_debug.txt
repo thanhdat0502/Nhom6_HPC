@@ -1,0 +1,5 @@
+[1/5] Building CXX object CMakeFiles/sw_benchmark.dir/src/benchmark.cpp.obj
+[2/5] Building CXX object CMakeFiles/sw_benchmark_support.dir/src/benchmark_support.cpp.obj
+[3/5] Linking CXX static library libsw_benchmark_support.a
+[4/5] Linking CXX executable test_benchmark.exe
+[5/5] Linking CXX executable sw_benchmark.exe

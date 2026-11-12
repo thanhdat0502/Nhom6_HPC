@@ -1,0 +1,43 @@
+{
+  "purpose": "Supplementary score equivalence on public phage genomes; no biological accuracy claim",
+  "sources": [
+    {
+      "accession_version": "NC_001422.1",
+      "header": "NC_001422.1 Escherichia phage phiX174, complete genome",
+      "record_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_001422.1",
+      "download_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001422.1&rettype=fasta&retmode=text",
+      "downloaded_utc": "2026-11-12T09:42:19.266876+00:00",
+      "filename": "NC_001422.1.fasta",
+      "length": 5386,
+      "alphabet": [
+        "A",
+        "C",
+        "G",
+        "T"
+      ],
+      "bytes": 5520,
+      "sha256": "caa155c83967cc080f4f188f14f1f28c18d77448e87c3d00d3579ed348f4de2a"
+    },
+    {
+      "accession_version": "NC_001330.1",
+      "header": "NC_001330.1 Enterobacteria phage alpha3, complete genome",
+      "record_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_001330.1",
+      "download_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001330.1&rettype=fasta&retmode=text",
+      "downloaded_utc": "2026-11-12T09:42:20.151751+00:00",
+      "filename": "NC_001330.1.fasta",
+      "length": 6087,
+      "alphabet": [
+        "A",
+        "C",
+        "G",
+        "T"
+      ],
+      "bytes": 6233,
+      "sha256": "a5660acbb30d5de50d79029f4511590c5dade0a00468f50766424cccaf3dde1a"
+    }
+  ],
+  "derivation": "Query is the first original FASTA byte for byte. References concatenate both complete original records; only record separators change. No bases changed or synthesized. First reference is a self-match control.",
+  "query_id": "NC_001422.1",
+  "query_sha256": "caa155c83967cc080f4f188f14f1f28c18d77448e87c3d00d3579ed348f4de2a",
+  "references_sha256": "6ef2bca414944f7eaec937cb9bc015a1c009fff1447e39748bb0bf258d8611ba"
+}

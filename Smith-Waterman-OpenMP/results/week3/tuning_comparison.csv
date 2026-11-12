@@ -1,0 +1,7 @@
+dataset_id,parallel_default_schedule,parallel_default_threads,parallel_default_median_seconds,observed_best_schedule,observed_best_threads,observed_best_median_seconds,observed_time_ratio,note
+small_uniform,dynamic,4,0.0004394,static,4,0.00014229999999999999,3.087842586085735,Exploratory choice from same session; not a kernel optimization or independent validation
+small_uneven,dynamic,4,0.0004082,static,4,0.0001594,2.560853199498118,Exploratory choice from same session; not a kernel optimization or independent validation
+medium_uniform,dynamic,4,0.0136928,static,8,0.0097067000000000004,1.41065449637879,Exploratory choice from same session; not a kernel optimization or independent validation
+medium_uneven,dynamic,4,0.0123135,dynamic,12,0.0077498000000000003,1.5888797130248522,Exploratory choice from same session; not a kernel optimization or independent validation
+large_uniform,dynamic,4,0.087794200000000003,static,12,0.061506600000000002,1.4273947836492344,Exploratory choice from same session; not a kernel optimization or independent validation
+large_uneven,dynamic,4,0.075795799999999997,static,12,0.059387299999999997,1.276296447220197,Exploratory choice from same session; not a kernel optimization or independent validation

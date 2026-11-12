@@ -1,0 +1,321 @@
+Start testing: Nov 12 15:55 SE Asia Standard Time
+----------------------------------------------------------
+1/9 Testing: smith_waterman
+1/9 Test: smith_waterman
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_smith_waterman.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"smith_waterman" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+PASS required case 1
+PASS required case 2
+PASS required case 3
+PASS required case 4
+PASS required case 5
+PASS required case 6
+PASS required case 7
+PASS gap traceback in both orientations
+PASS mismatch traceback
+PASS deterministic tied maximum and zero origin
+PASS known matrix and bounds
+PASS invalid DNA including empty opposite input
+PASS lowercase DNA
+PASS all 7225 DNA pairs up to length 3 against independent oracle
+PASS 250 seeded longer pairs: score, symmetry, coordinates, traceback
+PASS 1200-base identity and asymmetric rolling rows
+PASS formatted alignment and no-match message
+Passed: 17, Failed: 0
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"smith_waterman" end time: Nov 12 15:55 SE Asia Standard Time
+"smith_waterman" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/9 Testing: fasta_reader
+2/9 Test: fasta_reader
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_fasta_reader.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"fasta_reader" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+PASS multiple records, multiline DNA, lowercase and descriptions
+PASS CRLF, whitespace-only blank lines and no final newline
+PASS invalid nucleotide includes source and line
+PASS never discard spaces, gaps, comments or ambiguous bases
+PASS missing header or misplaced header
+PASS empty file and blank file
+PASS missing ID
+PASS empty first, middle or final record
+PASS duplicate IDs rejected even with different descriptions
+PASS actual file path with spaces
+PASS nonexistent file
+PASS stream I/O failure
+Passed: 12, Failed: 0
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"fasta_reader" end time: Nov 12 15:55 SE Asia Standard Time
+"fasta_reader" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/9 Testing: dna_generator
+3/9 Test: dna_generator
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_dna_generator.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"dna_generator" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+PASS same parameters reproduce records
+PASS known mt19937 seed-42 mapping
+PASS different seed changes the fixture
+PASS zero and maximum uint32 seeds
+PASS reject zero counts, zero lengths and size overflow
+PASS FASTA write/read round trip, wrapping and byte reproducibility
+PASS refuse overwrite and preserve existing bytes
+PASS invalid export parameters fail before file creation
+PASS export lowercase normalization
+PASS output parent must exist
+Passed: 10, Failed: 0
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"dna_generator" end time: Nov 12 15:55 SE Asia Standard Time
+"dna_generator" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/9 Testing: parallel
+4/9 Test: parallel
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_parallel.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"parallel" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+Available batch threads: 12
+Tested thread levels: 1 2 4 8 12
+PASS one query and one reference, known score
+PASS multiple references preserve distinct score order
+PASS identical references
+PASS no positive alignment
+PASS different lengths, mismatch and gaps
+PASS ties and duplicate sequences remain separate entries
+PASS empty query and empty references at API level
+PASS empty batch does not create a team
+PASS case-insensitive DNA
+PASS small seeded dataset
+PASS medium seeded dataset
+PASS heterogeneous lengths and more references than threads
+PASS fewer references than requested threads
+PASS parallel with one worker is still recorded as parallel
+PASS twenty repeated runs per schedule
+PASS configurable linear scoring with known expected results
+PASS integer score boundary and overflow rejected before dispatch
+PASS invalid DNA validated even for empty query or batch
+PASS invalid scoring rejected
+PASS invalid thread counts and serial multithreading rejected
+PASS invalid mode and schedule rejected
+PASS batch leaves OpenMP runtime settings unchanged
+PASS independent concurrent callers
+Passed: 23, Failed: 0
+<end of output>
+Test time =   0.09 sec
+----------------------------------------------------------
+Test Passed.
+"parallel" end time: Nov 12 15:55 SE Asia Standard Time
+"parallel" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/9 Testing: benchmark_math
+5/9 Test: benchmark_math
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_benchmark.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"benchmark_math" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+PASS median odd and even
+PASS mean min max population standard deviation
+PASS invalid timing samples rejected
+PASS speedup efficiency GCUPS and warmup exclusion
+PASS actual teams grouped separately and used in efficiency
+PASS DP cell count uses full lengths without boundary cells
+PASS six reproducible datasets with equal work per distribution pair
+PASS generated FASTA replay roundtrip
+PASS configuration validation and duplicates
+PASS real smoke measurements verified and all rounds recorded
+PASS measurement rejects invalid repetition counts and empty work
+PASS CSV quoting precision and thread mismatch flags
+Passed: 12, Failed: 0
+<end of output>
+Test time =   0.33 sec
+----------------------------------------------------------
+Test Passed.
+"benchmark_math" end time: Nov 12 15:55 SE Asia Standard Time
+"benchmark_math" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/9 Testing: benchmark_cli
+6/9 Test: benchmark_cli
+Command: "C:/msys64/ucrt64/bin/cmake.exe" "-DBENCH_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_benchmark.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_benchmark_cli.cmake"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"benchmark_cli" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+-- PASS help
+-- PASS verified_smoke_CSV_and_metadata
+-- PASS no_overwrite
+-- PASS too_few_warmups
+-- PASS too_few_runs
+-- PASS duplicate_threads
+-- PASS bad_threads
+-- PASS bad_schedule
+-- PASS missing_output
+-- PASS mixed_inputs
+Measuring external: 160 DP cells, 2 configurations
+Verified 18 samples for external
+Complete: D:/BTL HPC/Smith-Waterman-OpenMP/build-release/benchmark-smoke-08dcf251850b098e-external
+-- PASS external_FASTA
+Measuring smoke_uniform: 2304 DP cells, 3 configurations
+Verified 27 samples for smoke_uniform
+Measuring smoke_uneven: 2304 DP cells, 3 configurations
+Verified 27 samples for smoke_uneven
+Complete: D:/BTL HPC/Smith-Waterman-OpenMP/build-release/benchmark-smoke-08dcf251850b098e-release-policy
+-- PASS release_build_policy
+-- Passed: 12 benchmark CLI cases
+<end of output>
+Test time =   0.30 sec
+----------------------------------------------------------
+Test Passed.
+"benchmark_cli" end time: Nov 12 15:55 SE Asia Standard Time
+"benchmark_cli" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/9 Testing: cli
+7/9 Test: cli
+Command: "C:/msys64/ucrt64/bin/cmake.exe" "-DSW_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_cli.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"cli" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+-- PASS help
+-- PASS score
+-- PASS traceback
+-- PASS search
+-- PASS search_traceback
+-- PASS valid_mismatch
+-- PASS no_positive_match
+-- PASS lowercase_dna
+-- PASS no_command
+-- PASS unknown_command
+-- PASS missing_option
+-- PASS missing_value
+-- PASS duplicate_option
+-- PASS unknown_option
+-- PASS invalid_dna
+-- PASS invalid_second_dna
+-- PASS special_character
+-- PASS invalid_alignment_dna
+-- PASS special_alignment_character
+-- PASS missing_file
+-- PASS missing_query_id
+-- PASS missing_reference_id
+-- PASS invalid_count
+-- PASS zero_length
+-- PASS seed_overflow
+-- PASS trailing_numeric_text
+-- PASS empty_first_sequence
+-- PASS empty_second_sequence
+-- PASS both_empty_sequences
+-- PASS empty_alignment
+-- PASS generate
+-- PASS no_overwrite
+-- PASS generated_search
+-- PASS invalid_fasta_dna
+-- PASS invalid_fasta_header
+-- PASS invalid_fasta_empty_record
+-- Passed: 36 CLI cases
+<end of output>
+Test time =   0.66 sec
+----------------------------------------------------------
+Test Passed.
+"cli" end time: Nov 12 15:55 SE Asia Standard Time
+"cli" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/9 Testing: parallel_cli
+8/9 Test: parallel_cli
+Command: "C:/msys64/ucrt64/bin/cmake.exe" "-DSW_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-release/sw_cli.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DGENERATED_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/generated" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-release" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_parallel_cli.cmake"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"parallel_cli" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+-- PASS help_reports_thread_limit
+-- PASS week1_default_search_unchanged
+-- PASS explicit_serial
+-- PASS serial_statistics
+-- PASS default_parallel_threads
+-- PASS static_1_threads
+-- PASS dynamic_1_threads
+-- PASS static_2_threads
+-- PASS dynamic_2_threads
+-- PASS static_4_threads
+-- PASS dynamic_4_threads
+-- PASS static_8_threads
+-- PASS dynamic_8_threads
+-- PASS static_12_threads
+-- PASS dynamic_12_threads
+-- PASS serial_traceback_baseline
+-- PASS traceback_static
+-- PASS traceback_dynamic
+-- PASS medium_serial_baseline
+-- PASS medium_static
+-- PASS medium_dynamic
+-- PASS unknown_mode
+-- PASS unknown_schedule
+-- PASS zero_threads
+-- PASS negative_threads
+-- PASS thread_overflow
+-- PASS unsupported_threads
+-- PASS missing_thread_value
+-- PASS duplicate_threads
+-- PASS serial_multiple_threads
+-- PASS pair_align_still_serial
+-- PASS parallel_missing_reference_id
+-- PASS parallel_invalid_fasta
+-- PASS runtime_thread_limit
+-- PASS runtime_default_one_thread
+-- Passed: 35 parallel CLI cases; thread levels: 1;2;4;8;12
+<end of output>
+Test time =   0.64 sec
+----------------------------------------------------------
+Test Passed.
+"parallel_cli" end time: Nov 12 15:55 SE Asia Standard Time
+"parallel_cli" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/9 Testing: openmp
+9/9 Test: openmp
+Command: "D:/BTL HPC/Smith-Waterman-OpenMP/build-release/test_openmp.exe"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-release
+"openmp" start time: Nov 12 15:55 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+Thread ID: 0
+Thread ID: 2
+Thread ID: 1
+Thread ID: 3
+OpenMP macro: 202111
+Processors: 12
+Requested threads: 4
+Actual threads: 4
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"openmp" end time: Nov 12 15:55 SE Asia Standard Time
+"openmp" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 12 15:55 SE Asia Standard Time

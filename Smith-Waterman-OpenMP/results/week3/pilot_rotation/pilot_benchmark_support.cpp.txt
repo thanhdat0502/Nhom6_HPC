@@ -1,0 +1,207 @@
+#include "benchmark.h"
+#include "dna_generator.h"
+
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <limits>
+#include <map>
+#include <numeric>
+#include <ostream>
+#include <stdexcept>
+#include <tuple>
+
+namespace sw::bench {
+namespace {
+
+std::uint64_t checksum(const std::vector<int>& scores) {
+    std::uint64_t result = 14695981039346656037ULL;
+    for (const int score : scores) {
+        result ^= static_cast<std::uint32_t>(score);
+        result *= 1099511628211ULL;
+    }
+    return result;
+}
+
+void metadata(std::ostream& out, const Dataset& d) {
+    std::size_t shortest = std::numeric_limits<std::size_t>::max(), longest = 0;
+    for (const auto& r : d.references) {
+        shortest = std::min(shortest, r.sequence.size());
+        longest = std::max(longest, r.sequence.size());
+    }
+    out << csv_field(d.id) << ',' << csv_field(d.distribution) << ',' << d.seed << ','
+        << d.query.sequence.size() << ',' << d.references.size() << ',' << shortest << ',' << longest << ',' << dp_cells(d);
+}
+
+}  // namespace
+
+TimingStats timing_stats(std::vector<double> values) {
+    if (values.empty()) throw std::invalid_argument("No timing samples.");
+    for (const double t : values) {
+        if (!std::isfinite(t) || t <= 0) throw std::invalid_argument("Timing samples must be finite and positive.");
+    }
+    std::sort(values.begin(), values.end());
+    const auto n = values.size();
+    const double median = n % 2 ? values[n / 2] : values[n / 2 - 1] / 2 + values[n / 2] / 2;
+    const long double mean = std::accumulate(values.begin(), values.end(), 0.0L) / n;
+    long double squared = 0;
+    for (const double t : values) squared += (t - mean) * (t - mean);
+    return {median, static_cast<double>(mean), values.front(), values.back(), static_cast<double>(std::sqrt(squared / n))};
+}
+
+std::uint64_t dp_cells(const Dataset& dataset) {
+    std::uint64_t sum = 0;
+    const auto m = static_cast<std::uint64_t>(dataset.query.sequence.size());
+    for (const auto& reference : dataset.references) {
+        const auto n = static_cast<std::uint64_t>(reference.sequence.size());
+        if (m && n > (std::numeric_limits<std::uint64_t>::max() - sum) / m) {
+            throw std::length_error("DP cell count exceeds uint64 range.");
+        }
+        sum += m * n;
+    }
+    return sum;
+}
+
+std::vector<Dataset> make_suite(const std::string& scale) {
+    struct Spec { const char* name; std::size_t length, count; std::uint32_t seed; };
+    const std::vector<Spec> specs{{"smoke", 24, 4, 3100}, {"small", 192, 8, 3101},
+                                  {"medium", 768, 64, 3102}, {"large", 1536, 96, 3103}};
+    std::vector<Dataset> datasets;
+    for (const auto& spec : specs) {
+        if (scale != spec.name && !(scale == "all" && std::string(spec.name) != "smoke")) continue;
+        const auto source = generate_dna(spec.count + 1, spec.length * 4 / 3, spec.seed);
+        for (const bool uneven : {false, true}) {
+            Dataset d;
+            d.distribution = uneven ? "uneven" : "uniform";
+            d.id = std::string(spec.name) + '_' + d.distribution;
+            d.seed = std::to_string(spec.seed);
+            d.query = {"query", "seed=" + d.seed, source[0].sequence.substr(0, spec.length)};
+            for (std::size_t i = 0; i < spec.count; ++i) {
+                std::size_t length = spec.length;
+                if (uneven) {
+                    const auto half = spec.count / 2;
+                    const auto pair = std::min(i, spec.count - 1 - i);
+                    const auto delta = spec.length / 3 - (spec.length / 3 * pair) / (half - 1);
+                    length = i < half ? spec.length - delta : spec.length + delta;
+                }
+                d.references.push_back({"ref_" + std::to_string(i + 1), "seed=" + d.seed,
+                                         source[i + 1].sequence.substr(0, length)});
+            }
+            datasets.push_back(std::move(d));
+        }
+    }
+    if (datasets.empty()) throw std::invalid_argument("Unknown suite: " + scale);
+    return datasets;
+}
+
+std::vector<BatchOptions> configurations(const std::vector<int>& threads, const std::vector<Schedule>& schedules) {
+    if (threads.empty() || schedules.empty()) throw std::invalid_argument("Thread/schedule lists cannot be empty.");
+    std::vector<BatchOptions> configs{{ExecutionMode::Serial, 1, Schedule::Static}};
+    for (const int t : threads) {
+        if (t < 1 || t > max_batch_threads()) throw std::invalid_argument("Unsupported benchmark thread count.");
+        for (const auto schedule : schedules) {
+            if (schedule != Schedule::Static && schedule != Schedule::Dynamic) throw std::invalid_argument("Invalid benchmark schedule.");
+            const auto duplicate = std::find_if(configs.begin(), configs.end(), [&](const auto& c) {
+                return c.mode == ExecutionMode::Parallel && c.threads == t && c.schedule == schedule;
+            });
+            if (duplicate != configs.end()) throw std::invalid_argument("Duplicate benchmark configuration.");
+            configs.push_back({ExecutionMode::Parallel, t, schedule});
+        }
+    }
+    return configs;
+}
+
+std::vector<Sample> measure(const Dataset& d, const std::vector<BatchOptions>& configs, int warmups, int runs) {
+    if (warmups < 2 || warmups > 1000 || runs < 7 || runs > 10000 || configs.empty()) {
+        throw std::invalid_argument("Benchmark requires 2..1000 warmups, 7..10000 runs and nonempty configs.");
+    }
+    if (d.query.sequence.empty() || d.references.empty() || dp_cells(d) == 0) {
+        throw std::invalid_argument("Benchmark dataset must contain nonempty work.");
+    }
+    // Oracle scores are computed once, before warm-up or recorded measurements.
+    const auto expected = smith_waterman_batch(d.query.sequence, d.references).scores;
+    std::vector<Sample> samples;
+    int order = 0;
+    for (const bool warmup : {true, false}) {
+        const int rounds = warmup ? warmups : runs;
+        for (int round = 0; round < rounds; ++round) {
+            // Deterministic rotation changes each configuration's position to
+            // reduce fixed-order drift, while keeping all raw order information.
+            for (std::size_t position = 0; position < configs.size(); ++position) {
+                const auto& config = configs[(position + static_cast<std::size_t>(round)) % configs.size()];
+                const auto result = smith_waterman_batch(d.query.sequence, d.references, {}, config);
+                if (result.scores != expected) throw std::runtime_error("Benchmark scores differ from serial oracle: " + d.id);
+                if (!std::isfinite(result.compute_seconds) || result.compute_seconds <= 0 || result.actual_threads < 1) {
+                    throw std::runtime_error("Invalid timing/team metadata; increase workload if clock resolution is insufficient.");
+                }
+                samples.push_back({config, result.actual_threads, warmup, round + 1, ++order,
+                                   result.compute_seconds, checksum(result.scores)});
+            }
+        }
+    }
+    return samples;
+}
+
+std::vector<Summary> summarize(const std::vector<Sample>& samples, std::uint64_t cells) {
+    using Key = std::tuple<ExecutionMode, Schedule, int, int>;
+    std::map<Key, std::vector<double>> groups;
+    std::vector<double> serial;
+    for (const auto& s : samples) {
+        if (s.warmup) continue;
+        if (s.actual_threads < 1) throw std::invalid_argument("Invalid actual thread count.");
+        groups[{s.options.mode, s.options.schedule, s.options.threads, s.actual_threads}].push_back(s.seconds);
+        if (s.options.mode == ExecutionMode::Serial) {
+            if (s.actual_threads != 1 || s.options.threads != 1) throw std::invalid_argument("Serial must use one thread.");
+            serial.push_back(s.seconds);
+        }
+    }
+    const auto baseline = timing_stats(serial).median;
+    std::vector<Summary> result;
+    for (const auto& [key, times] : groups) {
+        const auto [mode, schedule, requested, actual] = key;
+        const auto stats = timing_stats(times);
+        const double speedup = baseline / stats.median;
+        result.push_back({{mode, requested, schedule}, actual, times.size(), stats,
+                          speedup, speedup / actual, static_cast<double>(cells) / (stats.median * 1e9)});
+    }
+    return result;
+}
+
+std::string csv_field(const std::string& value) {
+    if (value.find_first_of(",\"\r\n") == std::string::npos) return value;
+    std::string escaped = "\"";
+    for (const char c : value) { escaped += c; if (c == '"') escaped += '"'; }
+    return escaped + '"';
+}
+std::string mode_name(ExecutionMode mode) { return mode == ExecutionMode::Serial ? "serial" : "parallel"; }
+std::string schedule_name(const BatchOptions& o) {
+    return o.mode == ExecutionMode::Serial ? "none" : (o.schedule == Schedule::Static ? "static" : "dynamic");
+}
+void raw_header(std::ostream& out) {
+    out << "dataset_id,distribution,seed,query_length,reference_count,reference_min_length,reference_max_length,dp_cells,build_type,mode,schedule,requested_threads,actual_threads,phase,run_index,order_index,execution_seconds,score_checksum,verified\n";
+}
+void summary_header(std::ostream& out) {
+    out << "dataset_id,distribution,seed,query_length,reference_count,reference_min_length,reference_max_length,dp_cells,build_type,mode,schedule,requested_threads,actual_threads,samples,complete_samples,thread_mismatch,median_seconds,mean_seconds,min_seconds,max_seconds,population_stddev_seconds,speedup,efficiency,efficiency_percent,gcups\n";
+}
+void write_raw(std::ostream& out, const Dataset& d, const std::vector<Sample>& samples, const std::string& build) {
+    out << std::setprecision(17);
+    for (const auto& s : samples) {
+        metadata(out, d);
+        out << ',' << csv_field(build) << ',' << mode_name(s.options.mode) << ',' << schedule_name(s.options)
+            << ',' << s.options.threads << ',' << s.actual_threads << ',' << (s.warmup ? "warmup" : "measure")
+            << ',' << s.run_index << ',' << s.order_index << ',' << s.seconds << ',' << s.score_checksum << ",1\n";
+    }
+}
+void write_summary(std::ostream& out, const Dataset& d, const std::vector<Summary>& rows, int runs, const std::string& build) {
+    out << std::setprecision(17);
+    for (const auto& s : rows) {
+        metadata(out, d);
+        out << ',' << csv_field(build) << ',' << mode_name(s.options.mode) << ',' << schedule_name(s.options)
+            << ',' << s.options.threads << ',' << s.actual_threads << ',' << s.samples << ',' << (s.samples == static_cast<std::size_t>(runs))
+            << ',' << (s.options.threads != s.actual_threads) << ',' << s.timing.median << ',' << s.timing.mean
+            << ',' << s.timing.minimum << ',' << s.timing.maximum << ',' << s.timing.population_stddev
+            << ',' << s.speedup << ',' << s.efficiency << ',' << s.efficiency * 100 << ',' << s.gcups << '\n';
+    }
+}
+
+}  // namespace sw::bench

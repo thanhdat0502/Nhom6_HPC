@@ -1,0 +1,6 @@
+{
+  "purpose": "Fault injection on a copied fixture under build-release; formal data unchanged",
+  "mutated_field": "speedup",
+  "validator_exit": 1,
+  "invalid_formula_rejected": true
+}

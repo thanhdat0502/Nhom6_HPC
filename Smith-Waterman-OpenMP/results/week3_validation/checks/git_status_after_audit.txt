@@ -1,0 +1,15 @@
+ M .gitignore
+ M CMakeLists.txt
+ M README.md
+?? .gitattributes
+?? docs/week3_final_audit.md
+?? docs/week3_report.md
+?? include/benchmark.h
+?? results/week3/
+?? results/week3_recheck/
+?? results/week3_validation/
+?? scripts/
+?? src/benchmark.cpp
+?? src/benchmark_support.cpp
+?? tests/test_benchmark.cpp
+?? tests/test_benchmark_cli.cmake

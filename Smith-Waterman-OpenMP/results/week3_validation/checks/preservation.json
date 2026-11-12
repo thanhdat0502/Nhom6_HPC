@@ -1,0 +1,18 @@
+{
+  "snapshot_manifest": "D:\\BTL HPC\\.week1-backups\\before-week3-final-audit-20261112-163444\\manifest.json",
+  "manifest_entries": 163,
+  "original_result_files": {
+    "Smith-Waterman-OpenMP/results/week3/": 64,
+    "Smith-Waterman-OpenMP/results/week3_recheck/": 15
+  },
+  "changed_since_snapshot": [
+    "Smith-Waterman-OpenMP/README.md"
+  ],
+  "snapshot_zip_sha256": "c769b5f2a05bc7e6a019b29b361a628d3c2bfa08568fa9987e3128e70df9446f",
+  "expected_existing_file_changes": [
+    "Smith-Waterman-OpenMP/README.md"
+  ],
+  "unchanged_snapshot_files": 162,
+  "all_original_results_byte_identical": true,
+  "all_preexisting_cpp_headers_tests_cmake_plot_script_unchanged": true
+}

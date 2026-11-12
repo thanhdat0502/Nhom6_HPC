@@ -1,0 +1,16 @@
+{
+  "datasets": 1,
+  "warmups": 2,
+  "runs": 7,
+  "raw_rows": 45,
+  "measured_rows": 35,
+  "summary_rows": 5,
+  "all_formulas_verified": true,
+  "all_repetitions_present": true,
+  "dataset_sha256": {
+    "data/ncbi_phages_query.fasta": "74c1aca649f207a175b7d99e22fe4ef785c88f924aa5a7f5223c07c4e5c2b5aa",
+    "data/ncbi_phages_references.fasta": "18ac9340df5e24bccab610f9ad74dbb9909c9ee0a82ab2da70141b060aeeba36"
+  },
+  "mismatched_summary_groups": 0,
+  "incomplete_summary_groups": 0
+}

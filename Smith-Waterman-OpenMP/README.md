@@ -1,4 +1,4 @@
-# Smith-Waterman OpenMP — Tuần 1–2
+# Smith-Waterman OpenMP — Tuần 1–3
 
 Đề tài 6, môn **Tính toán hiệu năng cao**: khớp mẫu chuỗi gene sinh học quy mô lớn.
 Tuần 1 xây dựng nền tảng C++17: Smith-Waterman tuần tự, đọc FASTA, sinh DNA,
@@ -6,7 +6,9 @@ CLI và kiểm tra runtime OpenMP. Tuần 2 bổ sung **Parallel Batch Smith-Wat
 một query được so sánh với nhiều reference độc lập bằng OpenMP, hỗ trợ serial,
 parallel, static/dynamic scheduling và cấu hình số luồng. Chương trình tìm **căn chỉnh cục bộ** tốt nhất,
 không phải căn chỉnh toàn bộ hai chuỗi. Điểm mặc định: match **+2**, mismatch **−1**,
-mỗi ký tự gap **−2** (linear gap, không dùng affine gap).
+mỗi ký tự gap **−2** (linear gap, không dùng affine gap). Tuần 3 đã thêm benchmark
+Release, CSV từng lần đo, median/speedup/efficiency/GCUPS và 5 biểu đồ PNG từ số
+liệu thực nghiệm. Xem [báo cáo tuần 3](docs/week3_report.md) cho kết quả và giới hạn.
 
 ## Công nghệ và môi trường đã xác minh
 
@@ -31,10 +33,13 @@ Smith-Waterman-OpenMP/
 ├── include/
 │   ├── smith_waterman.h
 │   ├── smith_waterman_parallel.h
+│   ├── benchmark.h
 │   ├── fasta_reader.h
 │   └── dna_generator.h
 ├── src/
 │   ├── main.cpp
+│   ├── benchmark.cpp
+│   ├── benchmark_support.cpp
 │   ├── smith_waterman_serial.cpp
 │   ├── smith_waterman_parallel.cpp
 │   ├── fasta_reader.cpp
@@ -47,6 +52,8 @@ Smith-Waterman-OpenMP/
 │   ├── test_cli.cmake
 │   ├── test_parallel.cpp
 │   ├── test_parallel_cli.cmake
+│   ├── test_benchmark.cpp
+│   ├── test_benchmark_cli.cmake
 │   └── test_openmp.cpp
 ├── data/
 │   ├── samples/
@@ -58,7 +65,10 @@ Smith-Waterman-OpenMP/
 ├── docs/
 │   ├── week1_report.md
 │   ├── week1_fix_report.md
-│   └── week2_report.md
+│   ├── week2_report.md
+│   └── week3_report.md
+├── scripts/
+│   └── plot_benchmark.py
 └── results/
     ├── verification.md
     ├── ctest_debug.txt
@@ -68,7 +78,8 @@ Smith-Waterman-OpenMP/
     ├── week1_acceptance_20261112.md
     ├── week1_fix_20261112/     # Log trước/sau khắc phục và xác minh
     ├── week1_audit_20261112/   # Bằng chứng nghiệm thu đã tách khỏi build cũ
-    └── week2/                 # Baseline, build/test và demo tuần 2
+    ├── week2/                 # Baseline, build/test và demo tuần 2
+    └── week3/                 # CSV, dataset, metadata, PNG, log và pilot tuần 3
 ```
 
 File bổ sung so với đề bài: `test_dna_generator.cpp` kiểm tra sinh/xuất dữ liệu;
@@ -289,6 +300,11 @@ Hai file nhỏ/vừa đã bàn giao có tổng 2.144 base, không phải dữ li
 
 ## Test và OpenMP
 
+Tuần 3 hiện có **9/9 nhóm CTest PASS** ở Debug và Release, **158 PASS / 0 FAIL**
+nội bộ mỗi cấu hình trên máy hiện tại. Hai nhóm mới có 12 kiểm tra thống kê/
+dataset và 12 tình huống CLI benchmark. Không kiểm tra bắt buộc speedup > 1.
+Các số liệu tuần 2 bên dưới là baseline lịch sử; toàn bộ test cũ vẫn giữ nguyên.
+
 ```powershell
 ctest --test-dir build-release --output-on-failure
 # Xem chi tiết một bộ test:
@@ -296,6 +312,7 @@ ctest --test-dir build-release --output-on-failure
 .\build-release\test_fasta_reader.exe
 .\build-release\test_dna_generator.exe
 .\build-release\test_parallel.exe
+.\build-release\test_benchmark.exe
 .\build-release\test_openmp.exe
 ```
 
@@ -326,6 +343,75 @@ báo lỗi và exit code 1. Có regression cho DNA hợp lệ, N/ký tự đặc
 rỗng, thiếu tham số và FASTA không hợp lệ. Xem [báo cáo khắc phục tuần 1](docs/week1_fix_report.md)
 để đọc kết quả mới và hướng dẫn checkpoint Git. Các biên bản nghiệm thu cũ giữ
 nguyên kết quả trước sửa.
+
+## Benchmark Release và biểu đồ — Tuần 3
+
+```powershell
+cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build-release
+
+# Chỉ áp dụng trong phiên Terminal này; không đổi thiết lập hệ thống.
+$env:OMP_DYNAMIC = 'FALSE'
+$env:OMP_WAIT_POLICY = 'PASSIVE'
+
+# results/week3 đã có kết quả bàn giao; chọn thư mục MỚI khi chạy lại.
+.\build-release\sw_benchmark.exe --suite all --threads 1,2,4,8,12 --schedules static,dynamic --warmup 2 --runs 7 --output results/week3_recheck
+python scripts/plot_benchmark.py results/week3_recheck
+
+# Chỉ kiểm tra lại công thức CSV đang có, không ghi dữ liệu mới:
+python scripts/plot_benchmark.py results/week3 --validate-only
+```
+
+Runner từ chối thư mục đầu ra đã tồn tại; giữ nguyên các kết quả cũ. Mỗi lần chạy
+nạp/sinh dữ liệu trước khi đo, tính một vector điểm serial tham chiếu và đối chiếu
+toàn bộ điểm sau **mọi** warm-up/lần đo. Chỉ dữ liệu đúng điểm mới được chấp nhận.
+Warm-up mặc định 2, số lần đo 7; chấp nhận lần lượt 2..1000 và 7..10000.
+`--suite` nhận `small`, `medium`, `large`, `all`, `smoke`; nếu không ghi threads,
+runner tự chọn các mức khả dụng. `--schedules static` hoặc `dynamic` chọn một lịch.
+`--help` liệt kê đầy đủ cú pháp. Debug bị từ chối, trừ `--allow-debug` cho smoke
+test; CSV ghi build type và script biểu đồ không chấp nhận số liệu Debug.
+
+Benchmark DNA FASTA bên ngoài (chỉ A/C/G/T, không giả định seed):
+
+```powershell
+.\build-release\sw_benchmark.exe --query data/samples/queries.fasta --query-id query_2 --references data/samples/references.fasta --dataset-id samples --threads 1,2,4 --output results/week3_external
+```
+
+Suite chính có ba nhóm: query/reference chuẩn 192 base × 8 reference, 768 × 64,
+1536 × 96; mỗi nhóm có uniform và uneven. Query và tổng số ô DP bằng nhau trong
+từng cặp phân bố; uneven có độ dài sắp tăng theo chỉ số để khảo sát lệch tải.
+Seed lần lượt 3101/3102/3103; cách tái tạo và từng độ dài được ghi trong metadata.
+
+Các cấu hình được xáo trộn theo seed từ dataset ID, đo theo block: warm-up ngay
+trước 7 lần đo liên tiếp của mỗi cấu hình. Thời gian lấy từ cùng
+`BatchResult.compute_seconds`: gồm kernel/DP allocation và fork/join/scheduling,
+không gồm file I/O, so điểm, output CSV, traceback hoặc tạo biểu đồ. Nên chạy khi
+máy ít tải; không build/test/vẽ biểu đồ đồng thời với phép đo chính thức.
+
+```text
+T_serial      = median thời gian serial
+T_parallel(p) = median thời gian parallel, nhóm theo p thực tế
+Speedup       = T_serial / T_parallel(p)
+Efficiency    = Speedup / p             (nhân 100 để ra %)
+GCUPS         = query_length * sum(reference_lengths) / (seconds * 1e9)
+```
+
+`raw_benchmark.csv` giữ cả warm-up và measure, index/thứ tự chạy, requested/actual
+threads và checksum điểm; `summary_benchmark.csv` chỉ tổng hợp measure, có median,
+mean, min, max, population stddev, speedup, efficiency và GCUPS với 17 chữ số.
+Nếu team bị giảm, summary tách nhóm actual riêng, gắn cờ thiếu mẫu/lệch team;
+biểu đồ chỉ dùng nhóm đủ mẫu và actual=requested, không gộp ngầm các mức luồng.
+
+Kết quả bàn giao nằm trong [results/week3](results/week3/): **6 dataset, 594 mẫu**
+(132 warm-up + 462 measure), **66 dòng summary**, actual=requested ở mọi cấu hình.
+[Báo cáo tuần 3](docs/week3_report.md) trình bày số đo, phân tích và tuning tham số;
+kernel tuần 2 được giữ nguyên. Dữ liệu nhỏ không bảo đảm OpenMP nhanh hơn serial.
+
+Script kiểm tra độc lập mọi công thức/repetition bằng thư viện chuẩn Python rồi
+mới nhập Matplotlib để tạo 5 PNG 200 dpi. Không cần Python cho lõi C++.
+Thư mục figures đã tồn tại sẽ bị từ chối; `--replace-figures` cho phép chủ đích
+vẽ lại PNG/validation từ CSV cũ, không sửa CSV. Lần pilot trước khi sửa protocol
+được giữ riêng tại `results/week3/pilot_rotation/`, không trộn vào số liệu chính.
 
 ## Thuật toán, kiểm tra tay và độ phức tạp
 
@@ -391,8 +477,17 @@ alignment vẫn giữ hàng/cột biên. Thư viện không giữ trạng thái 
 
 Tuần 2 đã phân phối các **cặp query/reference độc lập** cho các luồng. Mỗi ma trận
 vẫn tuần tự vì phụ thuộc ô chéo/trên/trái; không dùng `omp for` trực tiếp trên
-hai vòng lặp ô DP. Chưa có wavefront, BLAST, CUDA, MPI, GUI hoặc benchmark toàn
-diện. Unit test đạt và phân tích code hỗ trợ tính đúng đắn, nhưng chưa chạy race
-detector. Sẵn sàng chuẩn bị benchmark tuần 3; chưa có kết luận speedup/efficiency.
-Repository chưa được commit tự động; bản trước tuần 2 được lưu trong
-`.week1-backups/` tại thư mục cha. Người dùng nên duyệt và lưu checkpoint Git.
+hai vòng lặp ô DP. Tuần 3 đã đo benchmark trên máy hiện tại; chưa có wavefront,
+BLAST, CUDA, MPI hoặc GUI. Unit test đạt và phân tích code hỗ trợ tính đúng đắn,
+nhưng chưa chạy race detector. Kết quả benchmark không đại diện mọi máy/dataset
+và không chứng minh độ chính xác sinh học. Nền tảng sẵn sàng cho báo cáo tuần 4.
+Tuần 1–2 đã có checkpoint `4069ccb`; thay đổi tuần 3 chưa được commit/push tự động.
+
+## Nghiệm thu cuối tuần 3
+
+[Báo cáo nghiệm thu cuối tuần 3](docs/week3_final_audit.md) bổ sung phiên đo độc lập
+tại [results/week3_validation](results/week3_validation/), thử nghiệm FASTA thật từ
+NCBI và log CTest Debug/Release mới. Mỗi build đạt 9/9 nhóm CTest, 158 PASS / 0 FAIL.
+Điểm số tái lập được; cấu hình nhanh nhất thay đổi giữa các phiên, nên số speedup
+và cấu hình tốt nhất trong báo cáo tuần 3 phải được ghi kèm phiên đo/dataset.
+Kết quả gốc và mã lõi C++ được bảo toàn. Chưa xác minh bằng race detector.

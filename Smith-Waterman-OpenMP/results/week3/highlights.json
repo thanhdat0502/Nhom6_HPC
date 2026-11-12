@@ -1,0 +1,56 @@
+[
+  {
+    "dataset": "small_uniform",
+    "serial_ms": 0.30410000000000004,
+    "best_schedule": "static",
+    "best_threads": 4,
+    "best_ms": 0.14229999999999998,
+    "speedup": 2.1370344342937457,
+    "efficiency_percent": 53.42586085734364
+  },
+  {
+    "dataset": "small_uneven",
+    "serial_ms": 0.31310000000000004,
+    "best_schedule": "static",
+    "best_threads": 4,
+    "best_ms": 0.1594,
+    "speedup": 1.964240903387704,
+    "efficiency_percent": 49.106022584692596
+  },
+  {
+    "dataset": "medium_uniform",
+    "serial_ms": 41.8688,
+    "best_schedule": "static",
+    "best_threads": 8,
+    "best_ms": 9.7067,
+    "speedup": 4.3133917809348175,
+    "efficiency_percent": 53.91739726168522
+  },
+  {
+    "dataset": "medium_uneven",
+    "serial_ms": 38.8206,
+    "best_schedule": "dynamic",
+    "best_threads": 12,
+    "best_ms": 7.7498000000000005,
+    "speedup": 5.009238948101886,
+    "efficiency_percent": 41.743657900849044
+  },
+  {
+    "dataset": "large_uniform",
+    "serial_ms": 244.6499,
+    "best_schedule": "static",
+    "best_threads": 12,
+    "best_ms": 61.5066,
+    "speedup": 3.9776202879040623,
+    "efficiency_percent": 33.14683573253385
+  },
+  {
+    "dataset": "large_uneven",
+    "serial_ms": 239.21120000000002,
+    "best_schedule": "static",
+    "best_threads": 12,
+    "best_ms": 59.387299999999996,
+    "speedup": 4.027985781471797,
+    "efficiency_percent": 33.56654817893164
+  }
+]

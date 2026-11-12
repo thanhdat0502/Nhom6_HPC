@@ -1,0 +1,13 @@
+Measuring small_uniform: 294912 DP cells, 11 configurations
+Verified 99 samples for small_uniform
+Measuring small_uneven: 294912 DP cells, 11 configurations
+Verified 99 samples for small_uneven
+Measuring medium_uniform: 37748736 DP cells, 11 configurations
+Verified 99 samples for medium_uniform
+Measuring medium_uneven: 37748736 DP cells, 11 configurations
+Verified 99 samples for medium_uneven
+Measuring large_uniform: 226492416 DP cells, 11 configurations
+Verified 99 samples for large_uniform
+Measuring large_uneven: 226492416 DP cells, 11 configurations
+Verified 99 samples for large_uneven
+Complete: results/week3_validation

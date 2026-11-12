@@ -1,0 +1,26 @@
+{
+  "datasets": 6,
+  "warmups": 2,
+  "runs": 7,
+  "raw_rows": 594,
+  "measured_rows": 462,
+  "summary_rows": 66,
+  "all_formulas_verified": true,
+  "all_repetitions_present": true,
+  "dataset_sha256": {
+    "data/small_uniform_query.fasta": "ec36572b48ecae4610e823c3f561df5a259acd180339dfadcd083c20d85a7229",
+    "data/small_uniform_references.fasta": "d0a55c85ff505845f1ef003ba2ccd5037909afc70b75601085e11d2eeebe49b4",
+    "data/small_uneven_query.fasta": "ec36572b48ecae4610e823c3f561df5a259acd180339dfadcd083c20d85a7229",
+    "data/small_uneven_references.fasta": "46929f6e8fee9f07ec822707afc858c47c6222be8260423b8d63da27dadcf29a",
+    "data/medium_uniform_query.fasta": "72c9a11f4bb7a36382981ef32d8a19f5502965e18892cbb5bf2a7c29fba8d356",
+    "data/medium_uniform_references.fasta": "d1d76204c321320d72cb6ad9772e1941152331ba358cdf794c7b9a08ee29e6e4",
+    "data/medium_uneven_query.fasta": "72c9a11f4bb7a36382981ef32d8a19f5502965e18892cbb5bf2a7c29fba8d356",
+    "data/medium_uneven_references.fasta": "ee55094fd252df6e2ecea074243453722e7c387a1ee20f2e24151453109dd5e3",
+    "data/large_uniform_query.fasta": "bc07048628e5642089ec572eda0da6fa940b594ba09eda4126ea7252acf97b7a",
+    "data/large_uniform_references.fasta": "8e03850a889015b3e5bd1d9ad97790978bbe0788bc21467162d3cc8618091893",
+    "data/large_uneven_query.fasta": "bc07048628e5642089ec572eda0da6fa940b594ba09eda4126ea7252acf97b7a",
+    "data/large_uneven_references.fasta": "f3fc9fac7bb6712505a46d801f6c2dce000c9e80d928ba6028228fd80e1971f4"
+  },
+  "mismatched_summary_groups": 0,
+  "incomplete_summary_groups": 0
+}

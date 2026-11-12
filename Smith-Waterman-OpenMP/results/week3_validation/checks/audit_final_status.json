@@ -1,0 +1,28 @@
+{
+  "ctest_debug": {
+    "groups_pass": 9,
+    "groups_fail": 0,
+    "internal_pass": 158,
+    "internal_fail": 0
+  },
+  "ctest_release": {
+    "groups_pass": 9,
+    "groups_fail": 0,
+    "internal_pass": 158,
+    "internal_fail": 0
+  },
+  "new_main_benchmark_verified_samples": 594,
+  "supplement_real_benchmark_verified_samples": 45,
+  "supplement_real_cli_pass": 16,
+  "supplement_real_cli_fail": 0,
+  "negative_csv_expected_rejections": 3,
+  "no_overwrite_expected_rejections": 3,
+  "original_pngs_reproduced_byte_identically": 5,
+  "old_result_files_unchanged": 79,
+  "local_report_links_verified": 21,
+  "race_detector": "Not run: GCC toolchain cannot link -ltsan; see probe log",
+  "source_changes": "No changes to any preexisting C++ source/header/test/CMake/plotting script",
+  "git_commit_or_push_performed": false,
+  "week4_features_implemented": false,
+  "ready_for_week4": true
+}

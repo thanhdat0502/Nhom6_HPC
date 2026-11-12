@@ -37,6 +37,29 @@ add_executable(test_openmp tests/test_openmp.cpp)
 target_link_libraries(test_openmp PRIVATE OpenMP::OpenMP_CXX)
 sw_warnings(test_openmp)
 
+add_library(sw_benchmark_support src/benchmark_support.cpp)
+target_link_libraries(sw_benchmark_support PUBLIC sw_parallel)
+sw_warnings(sw_benchmark_support)
+add_executable(sw_benchmark src/benchmark.cpp)
+target_link_libraries(sw_benchmark PRIVATE sw_benchmark_support)
+sw_warnings(sw_benchmark)
+set(SW_BENCHMARK_REVISION "unknown")
+set(SW_BENCHMARK_DIRTY "true")
+find_package(Git QUIET)
+if(Git_FOUND)
+    execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" OUTPUT_VARIABLE SW_BENCHMARK_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" OUTPUT_VARIABLE SW_GIT_STATUS)
+    if(SW_GIT_STATUS STREQUAL "")
+        set(SW_BENCHMARK_DIRTY "false")
+    endif()
+endif()
+target_compile_definitions(sw_benchmark PRIVATE
+    SW_BENCHMARK_BUILD_TYPE="$<CONFIG>"
+    SW_BENCHMARK_REVISION="${SW_BENCHMARK_REVISION}"
+    SW_BENCHMARK_DIRTY=${SW_BENCHMARK_DIRTY})
+
 include(CTest)
 if(BUILD_TESTING)
     foreach(module smith_waterman fasta_reader dna_generator)
@@ -49,6 +72,15 @@ if(BUILD_TESTING)
     target_link_libraries(test_parallel PRIVATE sw_parallel)
     sw_warnings(test_parallel)
     add_test(NAME parallel COMMAND test_parallel)
+    add_executable(test_benchmark tests/test_benchmark.cpp)
+    target_link_libraries(test_benchmark PRIVATE sw_benchmark_support)
+    sw_warnings(test_benchmark)
+    add_test(NAME benchmark_math COMMAND test_benchmark)
+    add_test(NAME benchmark_cli COMMAND "${CMAKE_COMMAND}"
+        "-DBENCH_EXECUTABLE=$<TARGET_FILE:sw_benchmark>"
+        "-DSAMPLE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data/samples"
+        "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_benchmark_cli.cmake")
     add_test(NAME cli COMMAND "${CMAKE_COMMAND}"
         "-DSW_EXECUTABLE=$<TARGET_FILE:sw_cli>"
         "-DSAMPLE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data/samples"
@@ -61,5 +93,5 @@ if(BUILD_TESTING)
         "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
         -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parallel_cli.cmake")
     add_test(NAME openmp COMMAND test_openmp)
-    set_tests_properties(smith_waterman fasta_reader dna_generator parallel cli parallel_cli openmp PROPERTIES TIMEOUT 60)
+    set_tests_properties(smith_waterman fasta_reader dna_generator parallel cli parallel_cli openmp benchmark_math benchmark_cli PROPERTIES TIMEOUT 60)
 endif()
