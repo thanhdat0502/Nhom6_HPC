@@ -1,0 +1,68 @@
+{
+  "cli_after": [
+    {
+      "mode": "debug",
+      "invalid": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error: Invalid DNA; only A, C, G, T are supported.\n"
+      },
+      "valid": {
+        "exit": 0,
+        "stdout": "Score: 8\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "release",
+      "invalid": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error: Invalid DNA; only A, C, G, T are supported.\n"
+      },
+      "valid": {
+        "exit": 0,
+        "stdout": "Score: 8\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "editor": [
+    {
+      "workspace": "D:\\BTL HPC",
+      "compiler": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "database": "D:\\BTL HPC\\Smith-Waterman-OpenMP\\build-debug\\compile_commands.json",
+      "cpp_test_entries": 4,
+      "probe_exit": 0,
+      "omp_header_found": true,
+      "provider_in_file": null
+    },
+    {
+      "workspace": "D:\\BTL HPC\\Smith-Waterman-OpenMP",
+      "compiler": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "database": "D:\\BTL HPC\\Smith-Waterman-OpenMP\\build-debug\\compile_commands.json",
+      "cpp_test_entries": 4,
+      "probe_exit": 0,
+      "omp_header_found": true,
+      "provider_in_file": null
+    }
+  ],
+  "preserved_core_config_data_files": [
+    ".vscode/c_cpp_properties.json",
+    ".vscode/settings.json",
+    "Smith-Waterman-OpenMP/.vscode/c_cpp_properties.json",
+    "Smith-Waterman-OpenMP/.vscode/settings.json",
+    "Smith-Waterman-OpenMP/CMakeLists.txt",
+    "Smith-Waterman-OpenMP/data/generated/medium_seed2026.fasta",
+    "Smith-Waterman-OpenMP/data/generated/small_seed42.fasta",
+    "Smith-Waterman-OpenMP/data/samples/queries.fasta",
+    "Smith-Waterman-OpenMP/data/samples/references.fasta",
+    "Smith-Waterman-OpenMP/include/dna_generator.h",
+    "Smith-Waterman-OpenMP/include/fasta_reader.h",
+    "Smith-Waterman-OpenMP/include/smith_waterman.h",
+    "Smith-Waterman-OpenMP/src/dna_generator.cpp",
+    "Smith-Waterman-OpenMP/src/fasta_reader.cpp",
+    "Smith-Waterman-OpenMP/src/smith_waterman_serial.cpp"
+  ],
+  "live_problems_ui_verified": false
+}

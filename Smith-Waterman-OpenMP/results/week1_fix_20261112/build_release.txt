@@ -1,0 +1,16 @@
+[1/1] Cleaning all built files...
+Cleaning... 14 files.
+[1/14] Building CXX object CMakeFiles/test_openmp.dir/tests/test_openmp.cpp.obj
+[2/14] Linking CXX executable test_openmp.exe
+[3/14] Building CXX object CMakeFiles/sw_core.dir/src/smith_waterman_serial.cpp.obj
+[4/14] Building CXX object CMakeFiles/sw_core.dir/src/fasta_reader.cpp.obj
+[5/14] Building CXX object CMakeFiles/sw_core.dir/src/dna_generator.cpp.obj
+[6/14] Linking CXX static library libsw_core.a
+[7/14] Building CXX object CMakeFiles/sw_cli.dir/src/main.cpp.obj
+[8/14] Building CXX object CMakeFiles/test_fasta_reader.dir/tests/test_fasta_reader.cpp.obj
+[9/14] Linking CXX executable sw_cli.exe
+[10/14] Linking CXX executable test_fasta_reader.exe
+[11/14] Building CXX object CMakeFiles/test_dna_generator.dir/tests/test_dna_generator.cpp.obj
+[12/14] Building CXX object CMakeFiles/test_smith_waterman.dir/tests/test_smith_waterman.cpp.obj
+[13/14] Linking CXX executable test_dna_generator.exe
+[14/14] Linking CXX executable test_smith_waterman.exe

@@ -1,0 +1,6 @@
+Query ID: seq_1
+Reference ID	Score
+seq_1	1024
+seq_2	227
+seq_3	221
+seq_4	223

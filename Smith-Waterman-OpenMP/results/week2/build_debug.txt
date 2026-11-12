@@ -1,0 +1,20 @@
+[1/1] Cleaning all built files...
+Cleaning... 18 files.
+[1/18] Building CXX object CMakeFiles/test_openmp.dir/tests/test_openmp.cpp.obj
+[2/18] Building CXX object CMakeFiles/sw_core.dir/src/smith_waterman_serial.cpp.obj
+[3/18] Building CXX object CMakeFiles/sw_parallel.dir/src/smith_waterman_parallel.cpp.obj
+[4/18] Building CXX object CMakeFiles/sw_core.dir/src/fasta_reader.cpp.obj
+[5/18] Building CXX object CMakeFiles/test_fasta_reader.dir/tests/test_fasta_reader.cpp.obj
+[6/18] Building CXX object CMakeFiles/sw_core.dir/src/dna_generator.cpp.obj
+[7/18] Building CXX object CMakeFiles/sw_cli.dir/src/main.cpp.obj
+[8/18] Building CXX object CMakeFiles/test_dna_generator.dir/tests/test_dna_generator.cpp.obj
+[9/18] Building CXX object CMakeFiles/test_smith_waterman.dir/tests/test_smith_waterman.cpp.obj
+[10/18] Linking CXX executable test_openmp.exe
+[11/18] Linking CXX static library libsw_core.a
+[12/18] Building CXX object CMakeFiles/test_parallel.dir/tests/test_parallel.cpp.obj
+[13/18] Linking CXX static library libsw_parallel.a
+[14/18] Linking CXX executable test_smith_waterman.exe
+[15/18] Linking CXX executable test_dna_generator.exe
+[16/18] Linking CXX executable test_fasta_reader.exe
+[17/18] Linking CXX executable sw_cli.exe
+[18/18] Linking CXX executable test_parallel.exe

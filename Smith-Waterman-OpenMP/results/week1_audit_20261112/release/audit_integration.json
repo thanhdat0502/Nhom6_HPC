@@ -1,0 +1,82 @@
+{
+  "pass": 6,
+  "fail": 1,
+  "checks": [
+    {
+      "name": "small_seed42.fasta structure",
+      "pass": true,
+      "details": {
+        "count": 3,
+        "lengths": [
+          32,
+          32,
+          32
+        ]
+      }
+    },
+    {
+      "name": "small_seed42.fasta seed replay",
+      "pass": true,
+      "details": {
+        "exit": 0,
+        "sha256": "1ce0a2e943898f3ff4dc6aab3a495eb3c65cf8b27bdc689df3564126bbdc0599"
+      }
+    },
+    {
+      "name": "medium_seed2026.fasta structure",
+      "pass": true,
+      "details": {
+        "count": 4,
+        "lengths": [
+          512,
+          512,
+          512,
+          512
+        ]
+      }
+    },
+    {
+      "name": "medium_seed2026.fasta seed replay",
+      "pass": true,
+      "details": {
+        "exit": 0,
+        "sha256": "e9add3fa5a69278326a81ee6c6df104e7f43db1e43df0a0808ab32408369bd1b"
+      }
+    },
+    {
+      "name": "FASTA CLI query_1 data/samples/references.fasta",
+      "pass": false,
+      "details": {
+        "ref_exact": 8,
+        "ref_partial": 6,
+        "ref_none": 2,
+        "ref_gap": 3
+      }
+    },
+    {
+      "name": "FASTA CLI query_2 data/samples/references.fasta",
+      "pass": true,
+      "details": {
+        "ref_exact": 4,
+        "ref_partial": 4,
+        "ref_none": 0,
+        "ref_gap": 14
+      }
+    },
+    {
+      "name": "FASTA CLI seq_1 data/generated/medium_seed2026.fasta",
+      "pass": true,
+      "details": {
+        "seq_1": 1024,
+        "seq_2": 227,
+        "seq_3": 221,
+        "seq_4": 223
+      }
+    }
+  ],
+  "invalid_dna_output": {
+    "exit": 1,
+    "stdout": "Score: ",
+    "stderr": "Error: Invalid DNA; only A, C, G, T are supported.\n"
+  }
+}

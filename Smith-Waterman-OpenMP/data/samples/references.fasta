@@ -1,0 +1,9 @@
+>ref_exact identical to query_1
+ACGT
+>ref_partial prefix match
+ACG
+>ref_none no match against query_2
+TTTT
+>ref_gap insertion relative to query_2
+AAAA
+GCCCC

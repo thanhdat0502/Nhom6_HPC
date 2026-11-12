@@ -1,0 +1,220 @@
+{
+  "purpose": "Functional smoke runs, not a performance benchmark",
+  "serial": {
+    "exit": 0,
+    "stdout": "Query ID: seq_1\nReference ID\tScore\nseq_1\t1024\nseq_2\t227\nseq_3\t221\nseq_4\t223\n",
+    "stderr": "Mode: serial\nSchedule: dynamic\nRequested threads: 1\nActual threads: 1\nCompute seconds: 0.001087\n"
+  },
+  "parallel": [
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "1",
+        "--schedule",
+        "static",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: static\nRequested threads: 1\nActual threads: 1\nCompute seconds: 0.0011022\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "1",
+        "--schedule",
+        "dynamic",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: dynamic\nRequested threads: 1\nActual threads: 1\nCompute seconds: 0.0011648\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "2",
+        "--schedule",
+        "static",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: static\nRequested threads: 2\nActual threads: 2\nCompute seconds: 0.0011993\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "2",
+        "--schedule",
+        "dynamic",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: dynamic\nRequested threads: 2\nActual threads: 2\nCompute seconds: 0.001407\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "4",
+        "--schedule",
+        "static",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: static\nRequested threads: 4\nActual threads: 4\nCompute seconds: 0.0013716\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "4",
+        "--schedule",
+        "dynamic",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: dynamic\nRequested threads: 4\nActual threads: 4\nCompute seconds: 0.0011466\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "8",
+        "--schedule",
+        "static",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: static\nRequested threads: 8\nActual threads: 8\nCompute seconds: 0.0016288\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "8",
+        "--schedule",
+        "dynamic",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: dynamic\nRequested threads: 8\nActual threads: 8\nCompute seconds: 0.001491\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "12",
+        "--schedule",
+        "static",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: static\nRequested threads: 12\nActual threads: 12\nCompute seconds: 0.0016236\n"
+    },
+    {
+      "args": [
+        "search",
+        "--query",
+        "data/generated/medium_seed2026.fasta",
+        "--query-id",
+        "seq_1",
+        "--references",
+        "data/generated/medium_seed2026.fasta",
+        "--mode",
+        "parallel",
+        "--threads",
+        "12",
+        "--schedule",
+        "dynamic",
+        "--stats"
+      ],
+      "exit": 0,
+      "stdout_matches_serial": true,
+      "stderr": "Mode: parallel\nSchedule: dynamic\nRequested threads: 12\nActual threads: 12\nCompute seconds: 0.0017533\n"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-12",
+  "backup": "D:\\BTL HPC\\.week1-backups\\before-week2-20261112-145331",
+  "week1_snapshot_files": 56,
+  "changed_existing_files": [
+    "Smith-Waterman-OpenMP/CMakeLists.txt",
+    "Smith-Waterman-OpenMP/README.md",
+    "Smith-Waterman-OpenMP/include/smith_waterman.h",
+    "Smith-Waterman-OpenMP/src/main.cpp",
+    "Smith-Waterman-OpenMP/src/smith_waterman_serial.cpp"
+  ],
+  "unchanged_existing_files": 51,
+  "week1_tests_data_fasta_generator_editor_unchanged": true,
+  "cpp_omp_compile_commands_valid": true,
+  "ctest": {
+    "debug": {
+      "pass": 7,
+      "fail": 0
+    },
+    "release": {
+      "pass": 7,
+      "fail": 0
+    }
+  },
+  "internal_per_configuration": {
+    "smith_waterman": 17,
+    "fasta": 12,
+    "dna_generator": 10,
+    "parallel_api": 23,
+    "week1_cli": 36,
+    "parallel_cli": 35,
+    "openmp_runtime": 1,
+    "total_pass": 134,
+    "total_fail": 0
+  },
+  "thread_levels": [
+    1,
+    2,
+    4,
+    8,
+    12
+  ],
+  "schedules": [
+    "static",
+    "dynamic"
+  ],
+  "race_detector_run": false,
+  "document_links_valid": true,
+  "source_whitespace_valid": true,
+  "credential_pattern_findings": [],
+  "git_head": "b70c148",
+  "git_staged_files": ""
+}

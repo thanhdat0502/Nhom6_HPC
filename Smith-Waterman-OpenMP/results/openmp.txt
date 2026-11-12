@@ -1,0 +1,8 @@
+Thread ID: 1
+Thread ID: 2
+Thread ID: 0
+Thread ID: 3
+OpenMP macro: 202111
+Processors: 12
+Requested threads: 4
+Actual threads: 4

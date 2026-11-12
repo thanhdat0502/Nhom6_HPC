@@ -1,0 +1,40 @@
+﻿Start testing: Nov 12 14:30 SE Asia Standard Time
+----------------------------------------------------------
+4/5 Testing: cli
+4/5 Test: cli
+Command: "C:/msys64/ucrt64/bin/cmake.exe" "-DSW_EXECUTABLE=D:/BTL HPC/Smith-Waterman-OpenMP/build-debug/sw_cli.exe" "-DSAMPLE_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/data/samples" "-DWORK_DIR=D:/BTL HPC/Smith-Waterman-OpenMP/build-debug" "-P" "D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake"
+Directory: D:/BTL HPC/Smith-Waterman-OpenMP/build-debug
+"cli" start time: Nov 12 14:30 SE Asia Standard Time
+Output:
+----------------------------------------------------------
+-- PASS help
+-- PASS score
+-- PASS traceback
+-- PASS search
+-- PASS search_traceback
+-- PASS valid_mismatch
+-- PASS no_positive_match
+-- PASS lowercase_dna
+-- PASS no_command
+-- PASS unknown_command
+-- PASS missing_option
+-- PASS missing_value
+-- PASS duplicate_option
+-- PASS unknown_option
+CMake Error at D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake:9 (message):
+  invalid_dna: unexpected stdout [Score: ]; expected pattern [^$]
+Call Stack (most recent call first):
+  D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake:23 (check_result)
+  D:/BTL HPC/Smith-Waterman-OpenMP/tests/test_cli.cmake:42 (check_cli)
+
+
+<end of output>
+Test time =   0.34 sec
+----------------------------------------------------------
+Test Failed.
+"cli" end time: Nov 12 14:30 SE Asia Standard Time
+"cli" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 12 14:30 SE Asia Standard Time
+

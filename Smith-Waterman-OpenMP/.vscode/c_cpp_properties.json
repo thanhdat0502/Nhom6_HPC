@@ -1,0 +1,18 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "MSYS2 UCRT64",
+      "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+      "compilerArgs": ["-fopenmp"],
+      "intelliSenseMode": "windows-gcc-x64",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/tests"
+      ],
+      "compileCommands": "${workspaceFolder}/build-debug/compile_commands.json"
+    }
+  ]
+}

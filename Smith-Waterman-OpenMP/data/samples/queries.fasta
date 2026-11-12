@@ -1,0 +1,5 @@
+>query_1 short exact-match demo
+acgt
+>query_2 insertion demo
+AAAA
+CCCC

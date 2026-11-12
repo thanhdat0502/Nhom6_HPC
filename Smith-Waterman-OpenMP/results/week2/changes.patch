@@ -1,0 +1,488 @@
+--- week1/Smith-Waterman-OpenMP/CMakeLists.txt
++++ week2/Smith-Waterman-OpenMP/CMakeLists.txt
+@@ -24,12 +24,15 @@
+ sw_warnings(sw_core)
+ 
+ add_executable(sw_cli src/main.cpp)
+-target_link_libraries(sw_cli PRIVATE sw_core)
+ sw_warnings(sw_cli)
+ 
+-# OpenMP is needed only for the standalone runtime check in Week 1.
+-# The reusable serial library holds no global state or OpenMP dependency.
++# Keep the serial library independent of OpenMP; batch execution is a separate
++# library that reuses the serial kernel and exposes the OpenMP link dependency.
+ find_package(OpenMP REQUIRED COMPONENTS CXX)
++add_library(sw_parallel src/smith_waterman_parallel.cpp)
++target_link_libraries(sw_parallel PUBLIC sw_core OpenMP::OpenMP_CXX)
++sw_warnings(sw_parallel)
++target_link_libraries(sw_cli PRIVATE sw_parallel)
+ add_executable(test_openmp tests/test_openmp.cpp)
+ target_link_libraries(test_openmp PRIVATE OpenMP::OpenMP_CXX)
+ sw_warnings(test_openmp)
+@@ -42,11 +45,21 @@
+         sw_warnings(test_${module})
+         add_test(NAME ${module} COMMAND test_${module})
+     endforeach()
++    add_executable(test_parallel tests/test_parallel.cpp)
++    target_link_libraries(test_parallel PRIVATE sw_parallel)
++    sw_warnings(test_parallel)
++    add_test(NAME parallel COMMAND test_parallel)
+     add_test(NAME cli COMMAND "${CMAKE_COMMAND}"
+         "-DSW_EXECUTABLE=$<TARGET_FILE:sw_cli>"
+         "-DSAMPLE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data/samples"
+         "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+         -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_cli.cmake")
++    add_test(NAME parallel_cli COMMAND "${CMAKE_COMMAND}"
++        "-DSW_EXECUTABLE=$<TARGET_FILE:sw_cli>"
++        "-DSAMPLE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data/samples"
++        "-DGENERATED_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data/generated"
++        "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}"
++        -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parallel_cli.cmake")
+     add_test(NAME openmp COMMAND test_openmp)
+-    set_tests_properties(smith_waterman fasta_reader dna_generator cli openmp PROPERTIES TIMEOUT 60)
++    set_tests_properties(smith_waterman fasta_reader dna_generator parallel cli parallel_cli openmp PROPERTIES TIMEOUT 60)
+ endif()
+--- week1/Smith-Waterman-OpenMP/README.md
++++ week2/Smith-Waterman-OpenMP/README.md
+@@ -1,8 +1,10 @@
+-# Smith-Waterman OpenMP — Tuần 1
++# Smith-Waterman OpenMP — Tuần 1–2
+ 
+ Đề tài 6, môn **Tính toán hiệu năng cao**: khớp mẫu chuỗi gene sinh học quy mô lớn.
+ Tuần 1 xây dựng nền tảng C++17: Smith-Waterman tuần tự, đọc FASTA, sinh DNA,
+-CLI và kiểm tra runtime OpenMP. Chương trình tìm **căn chỉnh cục bộ** tốt nhất,
++CLI và kiểm tra runtime OpenMP. Tuần 2 bổ sung **Parallel Batch Smith-Waterman**:
++một query được so sánh với nhiều reference độc lập bằng OpenMP, hỗ trợ serial,
++parallel, static/dynamic scheduling và cấu hình số luồng. Chương trình tìm **căn chỉnh cục bộ** tốt nhất,
+ không phải căn chỉnh toàn bộ hai chuỗi. Điểm mặc định: match **+2**, mismatch **−1**,
+ mỗi ký tự gap **−2** (linear gap, không dùng affine gap).
+ 
+@@ -28,11 +30,13 @@
+ │   └── settings.json
+ ├── include/
+ │   ├── smith_waterman.h
++│   ├── smith_waterman_parallel.h
+ │   ├── fasta_reader.h
+ │   └── dna_generator.h
+ ├── src/
+ │   ├── main.cpp
+ │   ├── smith_waterman_serial.cpp
++│   ├── smith_waterman_parallel.cpp
+ │   ├── fasta_reader.cpp
+ │   └── dna_generator.cpp
+ ├── tests/
+@@ -41,6 +45,8 @@
+ │   ├── test_fasta_reader.cpp
+ │   ├── test_dna_generator.cpp
+ │   ├── test_cli.cmake
++│   ├── test_parallel.cpp
++│   ├── test_parallel_cli.cmake
+ │   └── test_openmp.cpp
+ ├── data/
+ │   ├── samples/
+@@ -51,7 +57,8 @@
+ │       └── medium_seed2026.fasta
+ ├── docs/
+ │   ├── week1_report.md
+-│   └── week1_fix_report.md
++│   ├── week1_fix_report.md
++│   └── week2_report.md
+ └── results/
+     ├── verification.md
+     ├── ctest_debug.txt
+@@ -59,7 +66,9 @@
+     ├── medium_search.txt
+     ├── openmp.txt
+     ├── week1_acceptance_20261112.md
+-    └── week1_fix_20261112/     # Log trước/sau khắc phục và xác minh
++    ├── week1_fix_20261112/     # Log trước/sau khắc phục và xác minh
++    ├── week1_audit_20261112/   # Bằng chứng nghiệm thu đã tách khỏi build cũ
++    └── week2/                 # Baseline, build/test và demo tuần 2
+ ```
+ 
+ File bổ sung so với đề bài: `test_dna_generator.cpp` kiểm tra sinh/xuất dữ liệu;
+@@ -73,6 +82,11 @@
+ đã được dọn; log nghiệm thu được giữ trong `results/week1_audit_20261112/`.
+ README và lịch sử Git có sẵn tại thư mục cha được giữ nguyên.
+ 
++Tuần 2 thêm `smith_waterman_parallel.h/.cpp` để tách batch execution khỏi kernel
++serial, `test_parallel.cpp` kiểm tra API và `test_parallel_cli.cmake` kiểm tra
++cú pháp/chế độ CLI. Target `sw_parallel` liên kết `sw_core` và OpenMP; `sw_core`
++vẫn không phụ thuộc OpenMP. Không có thư viện bên ngoài hoặc hệ thống benchmark mới.
++
+ ## Chuẩn bị môi trường
+ 
+ Máy hiện tại đã có đủ công cụ, không cần cài thêm. Nếu chuẩn bị máy khác,
+@@ -121,7 +135,7 @@
+ ```powershell
+ New-Item -ItemType Directory -Force build-manual | Out-Null
+ $sources = @('src/smith_waterman_serial.cpp', 'src/fasta_reader.cpp', 'src/dna_generator.cpp')
+-g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Iinclude @sources src/main.cpp -o build-manual/sw_cli.exe
++g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -fopenmp -Iinclude @sources src/smith_waterman_parallel.cpp src/main.cpp -o build-manual/sw_cli.exe
+ foreach ($module in 'smith_waterman','fasta_reader','dna_generator') {
+     g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Iinclude @sources "tests/test_$module.cpp" -o "build-manual/test_$module.exe"
+     if ($LASTEXITCODE -ne 0) { throw "Build failed: $module" }
+@@ -130,10 +144,12 @@
+ }
+ g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -fopenmp tests/test_openmp.cpp -o build-manual/test_openmp.exe
+ .\build-manual\test_openmp.exe
+-```
+-
+-Các lệnh dự phòng này tạo ba bộ unit test và kiểm tra OpenMP; bộ tích hợp CLI
+-`test_cli.cmake` cần CMake. CLI có thể được demo thủ công bằng các lệnh bên dưới.
++g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -fopenmp -Iinclude @sources src/smith_waterman_parallel.cpp tests/test_parallel.cpp -o build-manual/test_parallel.exe
++.\build-manual\test_parallel.exe
++```
++
++Các lệnh dự phòng này tạo bốn bộ unit test và kiểm tra OpenMP; hai bộ tích hợp
++CLI `.cmake` cần CMake. CLI có thể được demo thủ công bằng các lệnh bên dưới.
+ 
+ ## Demo hai chuỗi và truy vết
+ 
+@@ -170,7 +186,7 @@
+ ```
+ 
+ `--query-id` là ID ngay sau `>`, trước khoảng trắng đầu tiên; phần còn lại là
+-mô tả. Query được so sánh **tuần tự** với mọi reference theo thứ tự trong file.
++mô tả. Theo mặc định query được so sánh **tuần tự** với mọi reference theo thứ tự trong file.
+ `--alignment-id` chỉ truy vết reference được chọn; còn lại dùng score-only.
+ Đường dẫn chứa khoảng trắng phải đặt trong dấu nháy.
+ 
+@@ -183,6 +199,78 @@
+ Những quy tắc bổ sung về ID và sequence giúp chọn query/reference không mơ hồ.
+ Lỗi được báo kèm tên nguồn, số dòng và vị trí ký tự sai khi thích hợp.
+ 
++## Search serial và OpenMP parallel — Tuần 2
++
++```powershell
++# Cú pháp tuần 1 giữ nguyên; mặc định vẫn serial và không in metadata.
++.\build-release\sw_cli.exe search --query data/samples/queries.fasta --query-id query_2 --references data/samples/references.fasta
++
++# Serial rõ ràng, ghi metadata vào stderr.
++.\build-release\sw_cli.exe search --query data/samples/queries.fasta --query-id query_2 --references data/samples/references.fasta --mode serial --threads 1 --stats
++
++# Parallel 4 luồng; thử thêm --schedule static hoặc --threads 1/2/8 khi khả dụng.
++.\build-release\sw_cli.exe search --query data/samples/queries.fasta --query-id query_2 --references data/samples/references.fasta --mode parallel --threads 4 --schedule dynamic --stats
++
++# Batch score song song, traceback của đúng một cặp vẫn dùng API serial.
++.\build-release\sw_cli.exe search --query data/samples/queries.fasta --query-id query_2 --references data/samples/references.fasta --mode parallel --threads 4 --alignment-id ref_gap
++```
++
++Serial và parallel đều cho các điểm **4, 4, 0, 14** theo thứ tự `ref_exact`,
++`ref_partial`, `ref_none`, `ref_gap`. Stdout giữ cùng định dạng và thứ tự FASTA;
++các luồng không in trực tiếp. `--stats` ghi vào stderr, ví dụ:
++
++```text
++Mode: parallel
++Schedule: dynamic
++Requested threads: 4
++Actual threads: 4
++Compute seconds: ...
++```
++
++| Option | Mặc định / quy tắc |
++|---|---|
++| `--mode serial\|parallel` | `serial` để giữ tương thích tuần 1 |
++| `--threads N` | Serial chỉ nhận 1; parallel mặc định `min(4, max_batch_threads())` |
++| `--schedule static\|dynamic` | `dynamic`; chỉ phân chia công việc khi chạy parallel |
++| `--stats` | Không bật mặc định; báo mode, schedule cấu hình, team yêu cầu/thực tế, thời gian compute |
++
++N phải dương và không vượt `min(omp_get_num_procs(), omp_get_thread_limit())`.
++Đây là chính sách giới hạn request của mỗi batch theo môi trường; không tự yêu
++cầu team vượt giới hạn đó. `--help` in giới hạn hiện tại. Runtime có thể cấp ít
++luồng hơn vì dynamic teams hoặc nested parallelism, nên luôn ghi nhận **actual**.
++Actual là kích thước team được tạo, kể cả thành viên không nhận việc nếu reference
++ít. API trả actual 0 và thời gian 0 cho batch rỗng; FASTA CLI vẫn từ chối file rỗng.
++
++Static chia công việc theo chỉ số thành các phần cố định, ít chi phí điều phối;
++hữu ích khi độ dài reference tương tự. Dynamic cấp từng reference khi worker
++rảnh (`chunk=1`), thường giúp cân bằng việc dài/ngắn nhưng có thêm chi phí runtime.
++Không kết luận lịch nào nhanh hơn nếu chưa đo trên dataset thực tế.
++
++Từng cặp query/reference gọi lại kernel serial và sở hữu hai hàng DP riêng.
++Mảng score/error cấp phát trước; iteration i chỉ ghi phần tử i. Query/reference
++và scoring chỉ đọc, không push_back, không đọc file hoặc ghi terminal trong
++worker. Dữ liệu/config được kiểm tra trước vùng OpenMP; ngoại lệ worker được
++bắt tại chỗ và ném lại trên luồng gọi sau khi join.
++
++API có thể dùng lại để đo tuần 3 mà không tính đọc FASTA vào compute:
++
++```cpp
++sw::BatchOptions options{sw::ExecutionMode::Parallel, 4, sw::Schedule::Dynamic};
++auto batch = sw::smith_waterman_batch(query.sequence, references,
++                                    sw::ScoringConfig{2, -1, -2}, options);
++// batch.scores[i] ứng với references[i]; metadata có actual_threads/compute_seconds.
++```
++
++API scoring yêu cầu match > 0, mismatch <= 0, gap < 0, có kiểm tra giới hạn điểm
++kiểu int. Overload score-only mới nhận scoring; API hai đối số, build matrix và
++alignment tuần 1 vẫn giữ điểm mặc định +2/−1/−2. CLI chưa có cờ chỉnh scoring.
++Không thay đổi/mutate input từ thread khác trong thời gian lời gọi đang chạy.
++
++`compute_seconds` dùng `steady_clock`, bắt đầu sau kiểm tra batch/cấp phát mảng
++đầu ra và kết thúc sau join. Bao gồm kernel (kiểm tra nội bộ, cấp phát hàng DP),
++fork/join và scheduling; không gồm file I/O, định dạng output, traceback hoặc
++vòng duyệt lỗi sau join. Đây là chuẩn bị đo compute, chưa phải benchmark tuần 3.
++
+ ## Sinh dữ liệu DNA có thể tái lập
+ 
+ ```powershell
+@@ -207,11 +295,14 @@
+ .\build-release\test_smith_waterman.exe
+ .\build-release\test_fasta_reader.exe
+ .\build-release\test_dna_generator.exe
++.\build-release\test_parallel.exe
+ .\build-release\test_openmp.exe
+ ```
+ 
+-Kết quả đã chạy: **5/5 nhóm CTest đạt ở cả Debug và Release**; 17 nhóm kiểm tra
+-Smith-Waterman, 12 FASTA, 10 generator, 36 tình huống CLI. Bộ Smith-Waterman gồm
++Kết quả tuần 2 đã chạy: **7/7 nhóm CTest đạt ở cả Debug và Release**; 17 nhóm
++Smith-Waterman, 12 FASTA, 10 generator, 23 batch parallel, 36 tình huống CLI cũ,
++35 tình huống CLI mới và 1 OpenMP runtime — **134 PASS / 0 FAIL** mỗi cấu hình
++trên máy này. Số ca CLI mới tùy số mức luồng khả dụng. Bộ Smith-Waterman gồm
+ 7 ca bắt buộc, gap hai chiều, mismatch, tie, ma trận mẫu, kiểm tra lỗi, chữ thường,
+ 7.225 cặp được đối chiếu oracle độc lập, 250 cặp sinh theo seed và ca đồng nhất
+ 1.200 base (điểm 2.400). Mỗi đường truy vết được tính lại điểm và đối chiếu
+@@ -221,8 +312,13 @@
+ ID **0, 1, 2, 3**. Thứ tự in ID không cố định. Test dùng `#pragma omp parallel`,
+ tắt dynamic teams và yêu cầu `min(4, omp_get_num_procs())`; nếu runtime cấp ít
+ hơn yêu cầu (ví dụ `OMP_THREAD_LIMIT`), test trả lỗi thay vì báo đạt.
+-Chi tiết: [bằng chứng kiểm tra](results/verification.md),
+-[báo cáo tuần 1](docs/week1_report.md).
++Batch được kiểm tra với **1, 2, 4, 8, 12** luồng, cả static/dynamic, lặp 20 lần
++mỗi lịch, ít/nhiều reference hơn team, dữ liệu nhỏ/vừa và độ dài không đều,
++scoring tùy chỉnh, input lỗi và hai caller độc lập đồng thời. CLI mới đối chiếu
++stdout với serial, kiểm tra actual threads, traceback, dữ liệu vừa và thread limit.
++Xem [báo cáo tuần 2](docs/week2_report.md) và [log Debug](results/week2/ctest_debug.txt)/
++[Release](results/week2/ctest_release.txt). Tài liệu lịch sử tuần 1:
++[bằng chứng kiểm tra](results/verification.md), [báo cáo tuần 1](docs/week1_report.md).
+ 
+ Sau nghiệm thu đã sửa lỗi in dở `Score: ` khi DNA sai. Mỗi tình huống CLI kiểm
+ tra riêng stdout, stderr và exit code; lỗi đầu vào phải có stdout rỗng, stderr
+@@ -293,7 +389,10 @@
+   Kiểm tra tràn kích thước/điểm và ngoại lệ cấp phát đã có; chưa có giới hạn RAM cấu hình.
+ - Mã thoát CLI: `0` thành công, `1` lỗi tham số, dữ liệu, I/O hoặc tài nguyên.
+ 
+-Tuần 1 không triển khai Smith-Waterman song song, benchmark toàn diện, GUI,
+-BLAST, CUDA hay MPI. Tuần 2 dự kiến phân phối các **cặp query/reference độc lập**
+-cho các luồng, đối chiếu với serial và khảo sát chi phí; không dùng `omp for`
+-trực tiếp trên các ô DP có phụ thuộc dữ liệu.
++Tuần 2 đã phân phối các **cặp query/reference độc lập** cho các luồng. Mỗi ma trận
++vẫn tuần tự vì phụ thuộc ô chéo/trên/trái; không dùng `omp for` trực tiếp trên
++hai vòng lặp ô DP. Chưa có wavefront, BLAST, CUDA, MPI, GUI hoặc benchmark toàn
++diện. Unit test đạt và phân tích code hỗ trợ tính đúng đắn, nhưng chưa chạy race
++detector. Sẵn sàng chuẩn bị benchmark tuần 3; chưa có kết luận speedup/efficiency.
++Repository chưa được commit tự động; bản trước tuần 2 được lưu trong
++`.week1-backups/` tại thư mục cha. Người dùng nên duyệt và lưu checkpoint Git.
+--- week1/Smith-Waterman-OpenMP/include/smith_waterman.h
++++ week2/Smith-Waterman-OpenMP/include/smith_waterman.h
+@@ -11,6 +11,16 @@
+ inline constexpr int match_score = 2;
+ inline constexpr int mismatch_score = -1;
+ inline constexpr int gap_score = -2;
++
++struct ScoringConfig {
++    int match = match_score;
++    int mismatch = mismatch_score;
++    int gap = gap_score;
++};
++
++// Linear-gap local alignment: positive match, nonpositive mismatch, negative gap.
++void validate_scoring(const ScoringConfig& scoring);
++void validate_dna(std::string_view dna);
+ 
+ // Accept lowercase DNA, reject every character outside A/C/G/T. Empty is valid.
+ std::string normalize_dna(std::string_view dna);
+@@ -49,6 +59,7 @@
+ ScoreMatrix build_score_matrix(std::string_view a, std::string_view b);
+ MaxCell find_max_cell(const ScoreMatrix& matrix);
+ int smith_waterman_score(std::string_view a, std::string_view b);
++int smith_waterman_score(std::string_view a, std::string_view b, const ScoringConfig& scoring);
+ Alignment smith_waterman_alignment(std::string_view a, std::string_view b);
+ void print_alignment(std::ostream& output, const Alignment& alignment);
+ 
+--- week1/Smith-Waterman-OpenMP/src/main.cpp
++++ week2/Smith-Waterman-OpenMP/src/main.cpp
+@@ -1,6 +1,7 @@
+ #include "dna_generator.h"
+ #include "fasta_reader.h"
+ #include "smith_waterman.h"
++#include "smith_waterman_parallel.h"
+ 
+ #include <algorithm>
+ #include <charconv>
+@@ -9,6 +10,7 @@
+ #include <limits>
+ #include <map>
+ #include <new>
++#include <optional>
+ #include <set>
+ #include <stdexcept>
+ #include <string>
+@@ -17,20 +19,25 @@
+ 
+ void help() {
+     std::cout <<
+-        "Smith-Waterman serial - Week 1 (C++17)\n"
++        "Smith-Waterman serial / OpenMP batch - Week 2 (C++17)\n"
+         "Scoring: match +2, mismatch -1, gap -2. DNA: A/C/G/T (case-insensitive).\n\n"
+         "Usage:\n"
+         "  sw_cli --help\n"
+         "  sw_cli align --seq1 DNA --seq2 DNA [--alignment]\n"
+         "  sw_cli search --query FILE --query-id ID --references FILE [--alignment-id ID]\n"
++        "                [--mode serial|parallel] [--threads N] [--schedule static|dynamic] [--stats]\n"
+         "  sw_cli generate --count N --length N --seed N --output FILE\n\n"
+         "align: score-only by default; --alignment prints one optimal traceback.\n"
+-        "search: choose query by FASTA ID, score against every reference sequentially;\n"
+-        "        --alignment-id prints the alignment for that reference ID.\n"
++        "search: default serial (1 thread); parallel defaults to min(4, available).\n"
++        "        Thread requests must fit the processor/OpenMP limit; no oversubscription.\n"
++        "        Dynamic scheduling is default; result order always follows FASTA.\n"
++        "        --alignment-id traces one pair serially after batch scoring.\n"
++        "        --stats writes mode, requested/actual threads and compute seconds to stderr.\n"
+         "generate: positive count/length, unsigned 32-bit seed; refuses to overwrite.\n"
+         "FASTA: unique IDs, nonempty records, multiline DNA, LF/CRLF supported.\n"
+         "Coordinates: zero-based half-open intervals [start, end).\n"
+         "Exit codes: 0 success, 1 invalid input/I/O/resource failure.\n";
++    std::cout << "Max supported batch threads: " << sw::max_batch_threads() << '\n';
+ }
+ 
+ using Options = std::map<std::string, std::string>;
+@@ -93,22 +100,56 @@
+             std::cout << "Score: " << score << '\n';
+         }
+     } else if (command == "search") {
+-        const auto options = parse_options(argc, argv, {"--query", "--query-id", "--references", "--alignment-id"});
++        const auto options = parse_options(argc, argv,
++            {"--query", "--query-id", "--references", "--alignment-id", "--mode", "--threads", "--schedule", "--stats"},
++            {"--stats"});
+         const auto& query_file = required(options, "--query");
+         const auto& query_id = required(options, "--query-id");
+         const auto& reference_file = required(options, "--references");
++        sw::BatchOptions batch_options;
++        if (options.count("--mode") != 0) {
++            const auto& mode = options.at("--mode");
++            if (mode == "parallel") {
++                batch_options.mode = sw::ExecutionMode::Parallel;
++                batch_options.threads = std::min(4, sw::max_batch_threads());
++            } else if (mode != "serial") {
++                throw std::invalid_argument("Invalid --mode: expected serial or parallel.");
++            }
++        }
++        if (options.count("--threads") != 0) {
++            batch_options.threads = static_cast<int>(number(options.at("--threads"), "--threads",
++                                                          static_cast<std::uint64_t>(sw::max_batch_threads()), true));
++        }
++        if (options.count("--schedule") != 0) {
++            const auto& schedule = options.at("--schedule");
++            if (schedule == "static") batch_options.schedule = sw::Schedule::Static;
++            else if (schedule != "dynamic") throw std::invalid_argument("Invalid --schedule: expected static or dynamic.");
++        }
++        if (batch_options.mode == sw::ExecutionMode::Serial && batch_options.threads != 1) {
++            throw std::invalid_argument("Serial mode requires --threads 1.");
++        }
+         const auto queries = sw::read_fasta(query_file);
+         const auto references = sw::read_fasta(reference_file);
+         const auto& query = select_record(queries, query_id);
+         const sw::FastaRecord* chosen = nullptr;
+         if (options.count("--alignment-id") != 0) chosen = &select_record(references, options.at("--alignment-id"));
++        const auto batch = sw::smith_waterman_batch(query.sequence, references, {}, batch_options);
++        std::optional<sw::Alignment> alignment;
++        if (chosen != nullptr) alignment = sw::smith_waterman_alignment(query.sequence, chosen->sequence);
+         std::cout << "Query ID: " << query.id << "\nReference ID\tScore\n";
+-        for (const auto& reference : references) {
+-            std::cout << reference.id << '\t' << sw::smith_waterman_score(query.sequence, reference.sequence) << '\n';
++        for (std::size_t i = 0; i < references.size(); ++i) {
++            std::cout << references[i].id << '\t' << batch.scores[i] << '\n';
+         }
+         if (chosen != nullptr) {
+             std::cout << "\nAlignment: " << query.id << " vs " << chosen->id << '\n';
+-            sw::print_alignment(std::cout, sw::smith_waterman_alignment(query.sequence, chosen->sequence));
++            sw::print_alignment(std::cout, *alignment);
++        }
++        if (options.count("--stats") != 0) {
++            std::cerr << "Mode: " << (batch.mode == sw::ExecutionMode::Serial ? "serial" : "parallel")
++                      << "\nSchedule: " << (batch.schedule == sw::Schedule::Static ? "static" : "dynamic")
++                      << "\nRequested threads: " << batch.requested_threads
++                      << "\nActual threads: " << batch.actual_threads
++                      << "\nCompute seconds: " << batch.compute_seconds << '\n';
+         }
+     } else if (command == "generate") {
+         const auto options = parse_options(argc, argv, {"--count", "--length", "--seed", "--output"});
+--- week1/Smith-Waterman-OpenMP/src/smith_waterman_serial.cpp
++++ week2/Smith-Waterman-OpenMP/src/smith_waterman_serial.cpp
+@@ -9,8 +9,8 @@
+ namespace sw {
+ namespace {
+ 
+-void check_score_range(std::size_t m, std::size_t n) {
+-    if (std::min(m, n) > static_cast<std::size_t>(std::numeric_limits<int>::max() / match_score)) {
++void check_score_range(std::size_t m, std::size_t n, int match = match_score) {
++    if (std::min(m, n) > static_cast<std::size_t>(std::numeric_limits<int>::max() / match)) {
+         throw std::length_error("DNA lengths exceed the supported integer score range.");
+     }
+ }
+@@ -49,6 +49,21 @@
+ }
+ 
+ }  // namespace
++
++void validate_scoring(const ScoringConfig& scoring) {
++    if (scoring.match <= 0 || scoring.mismatch > 0 || scoring.gap >= 0) {
++        throw std::invalid_argument("Scoring requires match > 0, mismatch <= 0 and gap < 0.");
++    }
++}
++
++void validate_dna(std::string_view dna) {
++    for (const char c : dna) {
++        if (c != 'A' && c != 'C' && c != 'G' && c != 'T' &&
++            c != 'a' && c != 'c' && c != 'g' && c != 't') {
++            throw std::invalid_argument("Invalid DNA; only A, C, G, T are supported.");
++        }
++    }
++}
+ 
+ std::string normalize_dna(std::string_view dna) {
+     std::string result;
+@@ -122,19 +137,17 @@
+ }
+ 
+ int smith_waterman_score(std::string_view input_a, std::string_view input_b) {
++    return smith_waterman_score(input_a, input_b, ScoringConfig{});
++}
++
++int smith_waterman_score(std::string_view input_a, std::string_view input_b,
++                         const ScoringConfig& scoring) {
+     // Validate both inputs even when one is empty. Do not copy whole inputs:
+     // auxiliary memory stays O(min(m,n)), including lowercase handling.
+-    const auto validate = [](std::string_view dna) {
+-        for (const char c : dna) {
+-            if (c != 'A' && c != 'C' && c != 'G' && c != 'T' &&
+-                c != 'a' && c != 'c' && c != 'g' && c != 't') {
+-                throw std::invalid_argument("Invalid DNA; only A, C, G, T are supported.");
+-            }
+-        }
+-    };
+-    validate(input_a);
+-    validate(input_b);
+-    check_score_range(input_a.size(), input_b.size());
++    validate_scoring(scoring);
++    validate_dna(input_a);
++    validate_dna(input_b);
++    check_score_range(input_a.size(), input_b.size(), scoring.match);
+     if (input_a.empty() || input_b.empty()) return 0;
+     if (input_a.size() < input_b.size()) std::swap(input_a, input_b);
+     const auto upper = [](char c) { return c >= 'a' && c <= 't' ? static_cast<char>(c - 'a' + 'A') : c; };
+@@ -144,8 +157,9 @@
+     for (const char a : input_a) {
+         current[0] = 0;
+         for (std::size_t j = 1; j <= input_b.size(); ++j) {
+-            current[j] = std::max({0, previous[j - 1] + substitution(upper(a), upper(input_b[j - 1])),
+-                                   previous[j] + gap_score, current[j - 1] + gap_score});
++            current[j] = std::max({0, previous[j - 1] +
++                                     (upper(a) == upper(input_b[j - 1]) ? scoring.match : scoring.mismatch),
++                                   previous[j] + scoring.gap, current[j - 1] + scoring.gap});
+             best = std::max(best, current[j]);
+         }
+         std::swap(previous, current);

@@ -1,0 +1,150 @@
+# CLI compatibility and real multi-thread dispatch, without extra dependencies.
+set(ENV{OMP_DYNAMIC} "FALSE")
+set_property(GLOBAL PROPERTY SW_PARALLEL_CLI_COUNT 0)
+
+function(passed label)
+    get_property(count GLOBAL PROPERTY SW_PARALLEL_CLI_COUNT)
+    math(EXPR count "${count} + 1")
+    set_property(GLOBAL PROPERTY SW_PARALLEL_CLI_COUNT "${count}")
+    message(STATUS "PASS ${label}")
+endfunction()
+
+function(check_failure label pattern)
+    execute_process(COMMAND "${SW_EXECUTABLE}" ${ARGN}
+        RESULT_VARIABLE code OUTPUT_VARIABLE output ERROR_VARIABLE error)
+    if(NOT "${code}" STREQUAL "1" OR NOT "${output}" STREQUAL "" OR NOT "${error}" MATCHES "^Error: ${pattern}")
+        message(FATAL_ERROR "${label}: exit=${code}; stdout=[${output}]; stderr=[${error}]")
+    endif()
+    passed("${label}")
+endfunction()
+
+function(check_equal label expected_output expected_threads mode schedule)
+    execute_process(COMMAND "${SW_EXECUTABLE}" ${ARGN}
+        RESULT_VARIABLE code OUTPUT_VARIABLE output ERROR_VARIABLE error)
+    if(NOT "${code}" STREQUAL "0" OR NOT "${output}" STREQUAL "${expected_output}")
+        message(FATAL_ERROR "${label}: exit=${code}; output differs from serial\n${output}\n${error}")
+    endif()
+    if("${expected_threads}" STREQUAL "")
+        if(NOT "${error}" STREQUAL "")
+            message(FATAL_ERROR "${label}: unexpected stderr ${error}")
+        endif()
+    else()
+        if(NOT "${error}" MATCHES "Mode: ${mode}\nSchedule: ${schedule}\nRequested threads: ${expected_threads}\nActual threads: ${expected_threads}\nCompute seconds: [0-9.eE+-]+")
+            message(FATAL_ERROR "${label}: invalid execution metadata ${error}")
+        endif()
+    endif()
+    passed("${label}")
+endfunction()
+
+execute_process(COMMAND "${SW_EXECUTABLE}" --help
+    RESULT_VARIABLE code OUTPUT_VARIABLE output ERROR_VARIABLE error)
+if(NOT "${code}" STREQUAL "0" OR NOT "${error}" STREQUAL "" OR
+   NOT "${output}" MATCHES "Max supported batch threads: ([0-9]+)")
+    message(FATAL_ERROR "Cannot discover supported batch thread count.")
+endif()
+set(available "${CMAKE_MATCH_1}")
+if(available LESS 1)
+    message(FATAL_ERROR "Invalid available thread count: ${available}")
+endif()
+passed(help_reports_thread_limit)
+
+set(sample_args search --query "${SAMPLE_DIR}/queries.fasta" --query-id query_2
+    --references "${SAMPLE_DIR}/references.fasta")
+execute_process(COMMAND "${SW_EXECUTABLE}" ${sample_args}
+    RESULT_VARIABLE code OUTPUT_VARIABLE serial_output ERROR_VARIABLE error)
+if(NOT "${code}" STREQUAL "0" OR NOT "${error}" STREQUAL "" OR
+   NOT "${serial_output}" STREQUAL "Query ID: query_2\nReference ID\tScore\nref_exact\t4\nref_partial\t4\nref_none\t0\nref_gap\t14\n")
+    message(FATAL_ERROR "Week 1 default search output changed: ${serial_output}\n${error}")
+endif()
+passed(week1_default_search_unchanged)
+check_equal(explicit_serial "${serial_output}" "" "" "" ${sample_args} --mode serial --threads 1)
+check_equal(serial_statistics "${serial_output}" 1 serial dynamic ${sample_args} --mode serial --stats)
+if(available LESS 4)
+    set(default_threads "${available}")
+else()
+    set(default_threads 4)
+endif()
+check_equal(default_parallel_threads "${serial_output}" "${default_threads}" parallel dynamic ${sample_args} --mode parallel --stats)
+
+set(levels)
+foreach(threads 1 2 4 8)
+    if(NOT threads GREATER available)
+        list(APPEND levels "${threads}")
+    endif()
+endforeach()
+list(APPEND levels "${available}")
+list(REMOVE_DUPLICATES levels)
+foreach(threads IN LISTS levels)
+    foreach(schedule static dynamic)
+        check_equal("${schedule}_${threads}_threads" "${serial_output}" "${threads}" parallel "${schedule}"
+            ${sample_args} --mode parallel --threads "${threads}" --schedule "${schedule}" --stats)
+    endforeach()
+endforeach()
+
+execute_process(COMMAND "${SW_EXECUTABLE}" ${sample_args} --alignment-id ref_gap
+    RESULT_VARIABLE code OUTPUT_VARIABLE alignment_output ERROR_VARIABLE error)
+if(NOT "${code}" STREQUAL "0" OR NOT "${error}" STREQUAL "" OR NOT "${alignment_output}" MATCHES "AAAA-CCCC")
+    message(FATAL_ERROR "Serial traceback baseline failed.")
+endif()
+passed(serial_traceback_baseline)
+foreach(schedule static dynamic)
+    check_equal("traceback_${schedule}" "${alignment_output}" "${default_threads}" parallel "${schedule}"
+        ${sample_args} --mode parallel --threads "${default_threads}" --schedule "${schedule}"
+        --alignment-id ref_gap --stats)
+endforeach()
+
+set(medium_args search --query "${GENERATED_DIR}/medium_seed2026.fasta" --query-id seq_1
+    --references "${GENERATED_DIR}/medium_seed2026.fasta")
+execute_process(COMMAND "${SW_EXECUTABLE}" ${medium_args}
+    RESULT_VARIABLE code OUTPUT_VARIABLE medium_output ERROR_VARIABLE error)
+if(NOT "${code}" STREQUAL "0" OR NOT "${error}" STREQUAL "" OR NOT "${medium_output}" MATCHES "seq_1\t1024\nseq_2\t227\nseq_3\t221\nseq_4\t223")
+    message(FATAL_ERROR "Bundled medium dataset serial scores changed.")
+endif()
+passed(medium_serial_baseline)
+foreach(schedule static dynamic)
+    check_equal("medium_${schedule}" "${medium_output}" "${default_threads}" parallel "${schedule}"
+        ${medium_args} --mode parallel --threads "${default_threads}" --schedule "${schedule}" --stats)
+endforeach()
+
+check_failure(unknown_mode "Invalid --mode" ${sample_args} --mode other)
+check_failure(unknown_schedule "Invalid --schedule" ${sample_args} --mode parallel --schedule other)
+check_failure(zero_threads "Invalid integer" ${sample_args} --mode parallel --threads 0)
+check_failure(negative_threads "Invalid integer" ${sample_args} --mode parallel --threads -1)
+check_failure(thread_overflow "Invalid integer" ${sample_args} --mode parallel --threads 18446744073709551616)
+math(EXPR too_many "${available} + 1")
+check_failure(unsupported_threads "Invalid integer" ${sample_args} --mode parallel --threads "${too_many}")
+check_failure(missing_thread_value "Missing value" ${sample_args} --mode parallel --threads)
+check_failure(duplicate_threads "Repeated option" ${sample_args} --mode parallel --threads 1 --threads 1)
+if(available GREATER 1)
+    check_failure(serial_multiple_threads "Serial mode requires" ${sample_args} --mode serial --threads 2)
+endif()
+check_failure(pair_align_still_serial "Unknown option" align --seq1 A --seq2 A --mode parallel)
+check_failure(parallel_missing_reference_id "FASTA ID not found" ${sample_args} --mode parallel --alignment-id absent --stats)
+
+string(RANDOM LENGTH 16 ALPHABET 0123456789abcdef suffix)
+set(invalid "${WORK_DIR}/parallel-invalid-${suffix}.fasta")
+if(EXISTS "${invalid}")
+    message(FATAL_ERROR "Refusing to overwrite a preexisting test fixture.")
+endif()
+file(WRITE "${invalid}" ">invalid\nACNT\n")
+check_failure(parallel_invalid_fasta "[^\n]*only A, C, G, T" search --query "${SAMPLE_DIR}/queries.fasta"
+    --query-id query_1 --references "${invalid}" --mode parallel --stats)
+file(REMOVE "${invalid}")
+
+# Verify the user/runtime thread limit is honored without changing the system.
+set(had_thread_limit FALSE)
+if(DEFINED ENV{OMP_THREAD_LIMIT})
+    set(had_thread_limit TRUE)
+    set(saved_thread_limit "$ENV{OMP_THREAD_LIMIT}")
+endif()
+set(ENV{OMP_THREAD_LIMIT} 1)
+check_failure(runtime_thread_limit "Invalid integer" ${sample_args} --mode parallel --threads 2)
+check_equal(runtime_default_one_thread "${serial_output}" 1 parallel dynamic ${sample_args} --mode parallel --stats)
+if(had_thread_limit)
+    set(ENV{OMP_THREAD_LIMIT} "${saved_thread_limit}")
+else()
+    unset(ENV{OMP_THREAD_LIMIT})
+endif()
+
+get_property(count GLOBAL PROPERTY SW_PARALLEL_CLI_COUNT)
+message(STATUS "Passed: ${count} parallel CLI cases; thread levels: ${levels}")

@@ -1,0 +1,63 @@
+Candidate tracked/untracked files (no staging performed):
+.gitignore
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+README.md
+Smith-Waterman-OpenMP/.gitignore
+Smith-Waterman-OpenMP/.vscode/c_cpp_properties.json
+Smith-Waterman-OpenMP/.vscode/settings.json
+Smith-Waterman-OpenMP/CMakeLists.txt
+Smith-Waterman-OpenMP/README.md
+Smith-Waterman-OpenMP/data/generated/medium_seed2026.fasta
+Smith-Waterman-OpenMP/data/generated/small_seed42.fasta
+Smith-Waterman-OpenMP/data/samples/queries.fasta
+Smith-Waterman-OpenMP/data/samples/references.fasta
+Smith-Waterman-OpenMP/docs/week1_fix_report.md
+Smith-Waterman-OpenMP/docs/week1_report.md
+Smith-Waterman-OpenMP/include/dna_generator.h
+Smith-Waterman-OpenMP/include/fasta_reader.h
+Smith-Waterman-OpenMP/include/smith_waterman.h
+Smith-Waterman-OpenMP/results/ctest_debug.txt
+Smith-Waterman-OpenMP/results/ctest_release.txt
+Smith-Waterman-OpenMP/results/medium_search.txt
+Smith-Waterman-OpenMP/results/openmp.txt
+Smith-Waterman-OpenMP/results/verification.md
+Smith-Waterman-OpenMP/results/week1_acceptance_20261112.md
+Smith-Waterman-OpenMP/results/week1_fix_20261112/build_debug.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/build_release.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/changes.patch
+Smith-Waterman-OpenMP/results/week1_fix_20261112/configure_debug.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/configure_release.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/ctest_after_debug.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/ctest_after_release.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/ctest_before_debug.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/ctest_before_release.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/regression_before_fix.txt
+Smith-Waterman-OpenMP/results/week1_fix_20261112/verification.json
+Smith-Waterman-OpenMP/src/dna_generator.cpp
+Smith-Waterman-OpenMP/src/fasta_reader.cpp
+Smith-Waterman-OpenMP/src/main.cpp
+Smith-Waterman-OpenMP/src/smith_waterman_serial.cpp
+Smith-Waterman-OpenMP/tests/test_cli.cmake
+Smith-Waterman-OpenMP/tests/test_dna_generator.cpp
+Smith-Waterman-OpenMP/tests/test_fasta_reader.cpp
+Smith-Waterman-OpenMP/tests/test_openmp.cpp
+Smith-Waterman-OpenMP/tests/test_smith_waterman.cpp
+Smith-Waterman-OpenMP/tests/test_support.h
+
+{
+  "modified_existing_files": [
+    "Smith-Waterman-OpenMP/.gitignore",
+    "Smith-Waterman-OpenMP/README.md",
+    "Smith-Waterman-OpenMP/src/main.cpp",
+    "Smith-Waterman-OpenMP/tests/test_cli.cmake"
+  ],
+  "other_original_files_unchanged": 28,
+  "source_archive_intact": true,
+  "candidate_files_scanned": 45,
+  "secret_pattern_findings": [],
+  "ignored_build_backup_temp": true,
+  "source_data_editor_configs_trackable": true,
+  "links_and_whitespace": "PASS",
+  "git_head": "b70c148"
+}

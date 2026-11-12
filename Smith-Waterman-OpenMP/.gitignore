@@ -1,0 +1,12 @@
+/build*/
+/test-temp-*/
+/.vscode/*
+!/.vscode/c_cpp_properties.json
+!/.vscode/settings.json
+*.exe
+*.o
+*.obj
+*.a
+*.dll
+*.log
+# Keep the small, reproducible Week 1 datasets and verification reports in Git.

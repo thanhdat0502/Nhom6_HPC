@@ -1,0 +1,5 @@
+Mode: serial
+Schedule: dynamic
+Requested threads: 1
+Actual threads: 1
+Compute seconds: 0.001087
