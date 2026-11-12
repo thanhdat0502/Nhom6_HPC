@@ -137,6 +137,7 @@ void run(int argc, char* argv[]) {
         std::optional<sw::Alignment> alignment;
         if (chosen != nullptr) alignment = sw::smith_waterman_alignment(query.sequence, chosen->sequence);
         std::cout << "Query ID: " << query.id << "\nReference ID\tScore\n";
+
         for (std::size_t i = 0; i < references.size(); ++i) {
             std::cout << references[i].id << '\t' << batch.scores[i] << '\n';
         }
